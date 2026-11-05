@@ -1228,16 +1228,18 @@ function renderGeneralEvidence(evidence){
 }
 
 // Restore object URLs from IDB for any items that lost theirs (page reload)
+// blob: URLs never survive a reload — the ones saved in localStorage from a
+// prior page load are dead strings, not empty, so a truthiness check here
+// would wrongly skip them and leave the broken-image placeholder showing.
+// Always re-mint a fresh object URL from the real IndexedDB blob.
 function restoreEvidenceThumbs(evidence, scope){
   (evidence||[]).forEach(function(ev){
-    if (!ev.url) {
-      idbGet(ev.id).then(function(blob){
-        if (!blob) return;
-        ev.url = URL.createObjectURL(blob);
-        var img = scope.querySelector('[data-evid="'+ev.id+'"] img, [data-evid="'+ev.id+'"] video');
-        if (img) img.src = ev.url;
-      });
-    }
+    idbGet(ev.id).then(function(blob){
+      if (!blob) return;
+      ev.url = URL.createObjectURL(blob);
+      var img = scope.querySelector('[data-evid="'+ev.id+'"] img, [data-evid="'+ev.id+'"] video');
+      if (img) img.src = ev.url;
+    });
   });
 }
 
