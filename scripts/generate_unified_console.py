@@ -277,7 +277,7 @@ button{font-family:inherit;cursor:pointer}
 .step-exp{margin-top:7px;margin-left:26px;font-size:12.5px;line-height:1.5;color:var(--text-dim);background:var(--surface);border-left:3px solid var(--pass);padding:6px 9px;border-radius:0 7px 7px 0}
 .step-exp-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--pass);margin-bottom:2px}
 .step-ev-row{margin-top:8px;margin-left:26px}
-.step-ev-row .ev-thumb,.step-ev-row .ev-add{width:56px;height:56px}
+.step-ev-row .ev-thumb,.step-ev-row .ev-add{width:76px;height:76px}
 
 /* Evidence / exec fields (only in exec mode) */
 #det-ev-sec{display:none;flex-direction:column;gap:12px}
@@ -293,12 +293,20 @@ button{font-family:inherit;cursor:pointer}
 .ev-group{flex:none}
 .ev-group-title{font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:7px;text-transform:uppercase;letter-spacing:.03em}
 .ev-group-row{display:flex;flex-wrap:wrap;gap:8px}
-.ev-thumb{position:relative;width:72px;height:72px;border-radius:9px;overflow:hidden;border:1px solid var(--border);background:var(--surface-2)}
+.ev-thumb{position:relative;width:72px;height:72px;border-radius:9px;overflow:hidden;border:1px solid var(--border);background:var(--surface-2);cursor:zoom-in}
 .ev-thumb img,.ev-thumb video{width:100%;height:100%;object-fit:cover;display:block}
 .ev-thumb .rm{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;border:none;cursor:pointer}
 .ev-thumb .dl{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;border:none;cursor:pointer}
 .ev-add{width:72px;height:72px;border-radius:9px;border:1.5px dashed var(--border);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-size:10px;gap:3px;cursor:pointer;text-align:center}
 .ev-add svg{width:18px;height:18px}
+
+/* Evidence lightbox */
+#lightbox{position:fixed;inset:0;background:rgba(5,6,10,.88);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+#lightbox.hidden{display:none}
+#lightbox img,#lightbox video{max-width:90vw;max-height:82vh;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#lightbox-name{color:#e4e7ee;font-size:12.5px;font-family:"IBM Plex Mono",monospace}
+#lightbox-close{position:absolute;top:16px;right:20px;background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:8px;width:34px;height:34px;font-size:16px;cursor:pointer}
+#lightbox-close:hover{background:rgba(255,255,255,.22)}
 
 /* Status buttons (exec) */
 #det-foot{padding:10px 13px;border-top:1px solid var(--border);flex-shrink:0;background:var(--surface);display:none}
@@ -1172,12 +1180,42 @@ async function writeEvidenceToDisk(name, blob){
 function evThumbHtml(ev, label){
   var isVid = (ev.contentType||'').indexOf('video')===0;
   var src = ev.url || '';
-  return '<div class="ev-thumb" data-evid="'+esc(ev.id)+'" title="'+esc(ev.name||label)+'">'
+  return '<div class="ev-thumb" data-evid="'+esc(ev.id)+'" data-open="'+esc(ev.id)+'" title="'+esc(ev.name||label)+' — click to view full size">'
     +(isVid?'<video src="'+esc(src)+'" muted></video>':'<img src="'+esc(src)+'" alt="">')
     +'<button class="dl" data-dl="'+esc(ev.id)+'" title="Download">&#x2B07;</button>'
     +'<button class="rm" data-rm="'+esc(ev.id)+'" title="Remove">&#x2715;</button>'
     +'</div>';
 }
+
+function openLightbox(evId){
+  var cur = results[selId] || {};
+  var ev = (cur.evidence||[]).find(function(x){ return x.id===evId; });
+  if (!ev || !ev.url) return;
+  var box = document.getElementById('lightbox');
+  var isVid = (ev.contentType||'').indexOf('video')===0;
+  document.getElementById('lightbox-img').style.display = isVid ? 'none' : 'block';
+  document.getElementById('lightbox-vid').style.display = isVid ? 'block' : 'none';
+  if (isVid) { document.getElementById('lightbox-vid').src = ev.url; }
+  else { document.getElementById('lightbox-img').src = ev.url; }
+  document.getElementById('lightbox-name').textContent = ev.name || evId;
+  box.classList.remove('hidden');
+}
+
+function closeLightbox(){
+  var box = document.getElementById('lightbox');
+  box.classList.add('hidden');
+  document.getElementById('lightbox-vid').pause();
+  document.getElementById('lightbox-vid').src = '';
+  document.getElementById('lightbox-img').src = '';
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  var box = document.getElementById('lightbox');
+  if (box) box.addEventListener('click', function(e){ if (e.target === box) closeLightbox(); });
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') { var box = document.getElementById('lightbox'); if (box && !box.classList.contains('hidden')) closeLightbox(); }
+});
 
 function evAddCapButtons(tag){
   return '<div class="ev-add" data-addtag="'+esc(tag||'')+'">'
@@ -1262,7 +1300,10 @@ document.addEventListener('DOMContentLoaded', function(){
       var cur = results[selId] || {};
       var ev = (cur.evidence||[]).find(function(x){ return x.id===evId; });
       if (ev && ev.url){ var a=document.createElement('a'); a.href=ev.url; a.download=ev.name||evId; a.click(); }
+      return;
     }
+    var openBtn = e.target.closest('[data-open]');
+    if (openBtn) { openLightbox(openBtn.getAttribute('data-open')); return; }
   });
 });
 
@@ -2166,6 +2207,13 @@ function dl(content,type,name){
 </div>
 
 <div id="saved-flash">Saved</div>
+
+<div id="lightbox" class="hidden">
+  <button id="lightbox-close" onclick="closeLightbox()" title="Close">✕</button>
+  <img id="lightbox-img" src="" alt="">
+  <video id="lightbox-vid" src="" controls style="display:none"></video>
+  <div id="lightbox-name"></div>
+</div>
 </body>
 </html>"""
 
