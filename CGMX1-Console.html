@@ -212,6 +212,17 @@ button{font-family:inherit;cursor:pointer}
 .step-num{flex:none;width:18px;height:18px;border-radius:50%;background:var(--accent-weak);color:var(--accent);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;margin-top:1px}
 .step-txt{flex:1;font-size:13px;line-height:1.45;color:var(--text-dim)}
 
+/* Merged step cards: procedure + expected + evidence controls together */
+.step-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px 11px;margin-bottom:8px}
+.step-card:last-child{margin-bottom:0}
+.step-row{display:flex;gap:8px}
+.step-row .step-num{margin-top:2px}
+.step-proc{flex:1;font-size:13px;line-height:1.5;color:var(--text)}
+.step-exp{margin-top:7px;margin-left:26px;font-size:12.5px;line-height:1.5;color:var(--text-dim);background:var(--surface);border-left:3px solid var(--pass);padding:6px 9px;border-radius:0 7px 7px 0}
+.step-exp-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--pass);margin-bottom:2px}
+.step-ev-row{margin-top:8px;margin-left:26px}
+.step-ev-row .ev-thumb,.step-ev-row .ev-add{width:56px;height:56px}
+
 /* Evidence / exec fields (only in exec mode) */
 #det-ev-sec{display:none;flex-direction:column;gap:12px}
 #det-ev-sec.show{display:flex}
@@ -503,13 +514,12 @@ button{font-family:inherit;cursor:pointer}
     </div>
     <div id="det-body">
       <div class="det-block"><h3>Preconditions</h3><div id="d-pre" class="det-content"></div></div>
-      <div class="det-block"><h3>Procedure</h3><div id="d-proc" class="det-content"></div></div>
-      <div class="det-block"><h3>Expected Result</h3><div id="d-exp" class="det-content"></div></div>
+      <div class="det-block"><h3>Steps</h3><div id="d-steps"></div></div>
       <div class="det-block"><h3>Evidence Required</h3><div id="d-ev" class="det-content"></div></div>
       <!-- Evidence inputs (exec only) -->
       <div id="det-ev-sec">
-        <h3>Evidence captured here</h3>
-        <div id="evidence-groups"></div>
+        <h3>General evidence (not tied to one step)</h3>
+        <div id="evidence-general"></div>
         <input type="file" id="file-input" accept="image/*,video/*" multiple style="display:none">
         <div id="evidence-folder-row" style="font-size:11.5px;padding:4px 0;display:flex;align-items:center;gap:8px">
           <span id="evidence-folder-label" style="color:var(--text-faint)">Evidence folder: not connected</span>
@@ -538,7 +548,7 @@ button{font-family:inherit;cursor:pointer}
   <!-- Exec setup (replaces list-area when no active run) -->
   <div id="exec-setup">
     <h2>Start Execution</h2>
-    <div class="src-badge">✓ <strong id="src-cnt">454</strong> cases · <span id="src-proto">PRT-0392 · Modus App UIRS Test Cases</span> · Generated 2026-11-05 19:45</div>
+    <div class="src-badge">✓ <strong id="src-cnt">454</strong> cases · <span id="src-proto">PRT-0392 · Modus App UIRS Test Cases</span> · Generated 2026-11-05 19:53</div>
     <div id="exec-form">
       <h3>New Execution</h3>
       <div>
@@ -821,15 +831,15 @@ function openDetail(id) {
     (c.req ? `<span class="chip">${esc(c.req)}</span>` : '') +
     `<span class="chip">${esc(c.sec)}</span>`;
   document.getElementById('d-pre').innerHTML  = fmtNum(c.pre);
-  document.getElementById('d-proc').innerHTML = fmtNum(c.proc);
-  document.getElementById('d-exp').innerHTML  = fmtNum(c.exp);
   document.getElementById('d-ev').innerHTML   = fmtNum(c.ev);
-  if (mode === 'exec' && runActive) {
-    const r = results[id] || {};
+  const execLive = mode === 'exec' && runActive;
+  const r = execLive ? (results[id] || {}) : {};
+  renderSteps(c, execLive ? (r.evidence || []) : null);
+  if (execLive) {
     document.getElementById('ev-def').value   = r.defect || '';
     document.getElementById('ev-notes').value = r.notes  || '';
     document.getElementById('ev-ts').textContent = r.timestamp ? 'Last saved: ' + r.timestamp : '';
-    renderEvidenceGroups(c, r.evidence || []);
+    renderGeneralEvidence(r.evidence || []);
     hlSt(r.status || null);
   }
 }
@@ -1103,11 +1113,6 @@ async function writeEvidenceToDisk(name, blob){
   } catch(e) { console.warn('evidence disk-write failed for', name, e); }
 }
 
-function parseStepCount(text){
-  if(!text) return 0;
-  var m=text.match(/^\d+\./gm); return m ? m.length : 0;
-}
-
 function evThumbHtml(ev, label){
   var isVid = (ev.contentType||'').indexOf('video')===0;
   var src = ev.url || '';
@@ -1118,66 +1123,95 @@ function evThumbHtml(ev, label){
     +'</div>';
 }
 
-function renderEvidenceGroups(c, evidence){
-  var wrap = document.getElementById('evidence-groups');
+function evAddCapButtons(tag){
+  return '<div class="ev-add" data-addtag="'+esc(tag||'')+'">'
+    +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Add</div>'
+    +'<div class="ev-add" data-captag="'+esc(tag||'')+'" title="Capture a screen/window (e.g. a mirrored phone)">'
+    +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Capture</div>';
+}
+
+// Procedure + Expected Result rendered as one card per step, with that
+// step's evidence (thumbnails + Add/Capture) right there — not scrolled
+// off in a separate section — when a run is active.
+function renderSteps(c, evidence){
+  var wrap = document.getElementById('d-steps');
   if (!wrap) return;
-  var count = Math.max(parseStepCount(c.proc||''), parseStepCount(c.exp||''));
-  var groups = [];
-  for (var i=1; i<=count; i++) groups.push({tag:'step-'+i, title:'Step '+i});
-  groups.push({tag:null, title:'General'});
-
-  var html = groups.map(function(g){
-    var items = (evidence||[]).filter(function(e){ return (e.tag||null) === g.tag; });
-    var thumbs = items.map(function(ev){ return evThumbHtml(ev, g.title); }).join('');
-    var addBtn = '<div class="ev-add" data-addtag="'+esc(g.tag||'')+'">'
-      +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Add</div>';
-    var capBtn = '<div class="ev-add" data-captag="'+esc(g.tag||'')+'" title="Capture a screen/window (e.g. a mirrored phone)">'
-      +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Capture</div>';
-    return '<div class="ev-group"><div class="ev-group-title">'+esc(g.title)+'</div>'
-      +'<div class="ev-group-row">'+thumbs+addBtn+capBtn+'</div></div>';
-  }).join('');
+  var procItems = splitNumbered(c.proc||'');
+  var expItems  = splitNumbered(c.exp||'');
+  var showEv = !!evidence;
+  if (!procItems && !expItems) {
+    wrap.innerHTML = '<div class="det-content" style="margin-bottom:8px"><div class="step-exp-lbl" style="margin-bottom:3px">Procedure</div>'+fmtText(c.proc||'')+'</div>'
+      + '<div class="det-content"><div class="step-exp-lbl" style="margin-bottom:3px">Expected Result</div>'+fmtText(c.exp||'')+'</div>';
+    return;
+  }
+  procItems = procItems || [];
+  expItems = expItems || [];
+  var count = Math.max(procItems.length, expItems.length);
+  var html = '';
+  for (var i=1; i<=count; i++){
+    var tag = 'step-'+i;
+    var items = (evidence||[]).filter(function(e){ return (e.tag||null)===tag; });
+    var thumbs = items.map(function(ev){ return evThumbHtml(ev, 'Step '+i); }).join('');
+    html += '<div class="step-card">'
+      + '<div class="step-row"><div class="step-num">'+i+'</div><div class="step-proc">'+esc(procItems[i-1]||'')+'</div></div>'
+      + (expItems[i-1] ? ('<div class="step-exp"><div class="step-exp-lbl">Expected</div>'+esc(expItems[i-1])+'</div>') : '')
+      + (showEv ? ('<div class="ev-group-row step-ev-row">'+thumbs+evAddCapButtons(tag)+'</div>') : '')
+      + '</div>';
+  }
   wrap.innerHTML = html;
+  if (showEv) restoreEvidenceThumbs(evidence, wrap);
+}
 
-  wrap.querySelectorAll('[data-addtag]').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      pendingTag = btn.getAttribute('data-addtag') || null;
-      document.getElementById('file-input').click();
-    });
-  });
-  wrap.querySelectorAll('[data-captag]').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      captureScreenForTag(btn.getAttribute('data-captag') || null);
-    });
-  });
-  wrap.querySelectorAll('[data-rm]').forEach(function(btn){
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      removeEvidence(btn.getAttribute('data-rm'));
-    });
-  });
-  wrap.querySelectorAll('[data-dl]').forEach(function(btn){
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      var evId = btn.getAttribute('data-dl');
-      var cur = results[selId] || {};
-      var ev = (cur.evidence||[]).find(function(x){ return x.id===evId; });
-      if (ev && ev.url){
-        var a=document.createElement('a'); a.href=ev.url; a.download=ev.name||evId; a.click();
-      }
-    });
-  });
+function renderGeneralEvidence(evidence){
+  var wrap = document.getElementById('evidence-general');
+  if (!wrap) return;
+  var items = (evidence||[]).filter(function(e){ return !e.tag; });
+  var thumbs = items.map(function(ev){ return evThumbHtml(ev, 'General'); }).join('');
+  wrap.innerHTML = '<div class="ev-group-row">'+thumbs+evAddCapButtons(null)+'</div>';
+  restoreEvidenceThumbs(evidence, wrap);
+}
 
-  // Restore object URLs from IDB for any items that lost their URL (page reload)
+// Restore object URLs from IDB for any items that lost theirs (page reload)
+function restoreEvidenceThumbs(evidence, scope){
   (evidence||[]).forEach(function(ev){
     if (!ev.url) {
       idbGet(ev.id).then(function(blob){
         if (!blob) return;
         ev.url = URL.createObjectURL(blob);
-        var img = wrap.querySelector('[data-evid="'+ev.id+'"] img, [data-evid="'+ev.id+'"] video');
+        var img = scope.querySelector('[data-evid="'+ev.id+'"] img, [data-evid="'+ev.id+'"] video');
         if (img) img.src = ev.url;
       });
     }
   });
+}
+
+// One delegated listener covers Add/Capture/Remove/Download buttons
+// wherever they're rendered (per-step cards or the General group).
+document.addEventListener('DOMContentLoaded', function(){
+  var body = document.getElementById('det-body');
+  if (!body) return;
+  body.addEventListener('click', function(e){
+    var addBtn = e.target.closest('[data-addtag]');
+    if (addBtn) { pendingTag = addBtn.getAttribute('data-addtag') || null; document.getElementById('file-input').click(); return; }
+    var capBtn = e.target.closest('[data-captag]');
+    if (capBtn) { captureScreenForTag(capBtn.getAttribute('data-captag') || null); return; }
+    var rmBtn = e.target.closest('[data-rm]');
+    if (rmBtn) { e.stopPropagation(); removeEvidence(rmBtn.getAttribute('data-rm')); return; }
+    var dlBtn = e.target.closest('[data-dl]');
+    if (dlBtn) {
+      e.stopPropagation();
+      var evId = dlBtn.getAttribute('data-dl');
+      var cur = results[selId] || {};
+      var ev = (cur.evidence||[]).find(function(x){ return x.id===evId; });
+      if (ev && ev.url){ var a=document.createElement('a'); a.href=ev.url; a.download=ev.name||evId; a.click(); }
+    }
+  });
+});
+
+function refreshEvidenceUI(c){
+  var evidence = (results[selId]||{}).evidence || [];
+  renderSteps(c, evidence);
+  renderGeneralEvidence(evidence);
 }
 
 function removeEvidence(evId){
@@ -1187,7 +1221,7 @@ function removeEvidence(evId){
   if (ev && ev.url) URL.revokeObjectURL(ev.url);
   results[selId].evidence = (cur.evidence||[]).filter(function(e){ return e.id!==evId; });
   idbDel(evId);
-  renderEvidenceGroups(ALL_CASES.find(function(x){return x.id===selId;})||{}, results[selId].evidence);
+  refreshEvidenceUI(ALL_CASES.find(function(x){return x.id===selId;})||{});
   saveRun();
 }
 
@@ -1211,7 +1245,7 @@ function attachEvidenceFile(file, tag, extOverride){
   results[id].evidence.push(entry);
   idbPut(evId, file);
   writeEvidenceToDisk(name, file);
-  renderEvidenceGroups(c, results[id].evidence);
+  refreshEvidenceUI(c);
   saveRun();
 }
 
@@ -1936,15 +1970,20 @@ function fmtText(s){
   return `<div style="white-space:pre-wrap;font-size:13px;line-height:1.5;color:var(--text-dim)">${esc(s||'')}</div>`;
 }
 
+function splitNumbered(s){
+  if(!s) return null;
+  const lines=s.split('\n');
+  if(!lines.some(l=>/^\d+\./.test(l.trim()))) return null;
+  const items=[];let cur='';
+  lines.forEach(l=>{if(/^\d+\./.test(l.trim())){if(cur)items.push(cur.trim());cur=l.replace(/^\d+\.\s*/,'')}else cur+='\n'+l;});
+  if(cur)items.push(cur.trim());
+  return items;
+}
+
 function fmtNum(s){
   if(!s)return `<div style="color:var(--text-faint);font-size:12px;font-style:italic">None</div>`;
-  const lines=s.split('\n');
-  if(lines.some(l=>/^\d+\./.test(l.trim()))){
-    const items=[];let cur='';
-    lines.forEach(l=>{if(/^\d+\./.test(l.trim())){if(cur)items.push(cur.trim());cur=l.replace(/^\d+\.\s*/,'')}else cur+='\n'+l;});
-    if(cur)items.push(cur.trim());
-    return `<ul class="steps-list">${items.map((i,index)=>`<li><span class="step-num">${index+1}</span><span class="step-txt">${esc(i)}</span></li>`).join('')}</ul>`;
-  }
+  const items=splitNumbered(s);
+  if(items) return `<ul class="steps-list">${items.map((i,index)=>`<li><span class="step-num">${index+1}</span><span class="step-txt">${esc(i)}</span></li>`).join('')}</ul>`;
   return fmtText(s);
 }
 
