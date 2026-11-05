@@ -1,0 +1,26 @@
+
+(glucorx/modus/v1alpha2/calibration.protoglucorx.modus.v1alpha2"Ω
+Calibration
+name (	B‡A*
+reference_glucose_centi_mg_dl (B‡A5
+measure_time (2.google.protobuf.TimestampB‡A4
+create_time (2.google.protobuf.TimestampB‡A:ÅÍA~
+modus.glucorx.co.uk/Calibration@patients/{patient}/sessions/{session}/calibrations/{calibration}*calibrations2calibration"´
+CreateCalibrationRequest3
+parent (	B#‡A˙A
+modus.glucorx.co.uk/Session=
+calibration (2#.glucorx.modus.v1alpha2.CalibrationB‡A
+calibration_id (	B‡A"N
+GetCalibrationRequest5
+name (	B'‡A˙A!
+modus.glucorx.co.uk/Calibration"
+ListCalibrationsRequest3
+parent (	B#‡A˙A
+modus.glucorx.co.uk/Session
+	page_size (B‡A
+
+page_token (	B‡A"n
+ListCalibrationsResponse9
+calibrations (2#.glucorx.modus.v1alpha2.Calibration
+next_page_token (	B2
+uk.co.glucorx.modus.v1alpha2BCalibrationProtoPbproto3

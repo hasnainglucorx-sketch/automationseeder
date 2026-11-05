@@ -1,0 +1,28 @@
+
+)glucorx/modus/v1alpha2/service_info.protoglucorx.modus.v1alpha2"Á
+ServiceInfo
+name (	B‡A4
+server_time (2.google.protobuf.TimestampB‡A
+backend_version (	B‡A
+contract_version (	B‡A@
+
+app_builds (2'.glucorx.modus.v1alpha2.AppBuildSupportB‡AB
+required_terms (2%.glucorx.modus.v1alpha2.RequiredTermsB‡A:LÍAI
+modus.glucorx.co.uk/ServiceInfoserviceInfo*serviceInfos2serviceInfo"Ö
+AppBuildSupport2
+platform (2 .glucorx.modus.v1alpha2.Platform!
+minimum_supported_version (	
+recommended_version (	"Ç
+RequiredTerms
+document (	
+version (	
+content_uri (	M
+pending_version (24.glucorx.modus.v1alpha2.RequiredTerms.PendingVersionj
+PendingVersion
+version (	2
+effective_time (2.google.protobuf.Timestamp
+content_uri (	"N
+GetServiceInfoRequest5
+name (	B'‡A˙A!
+modus.glucorx.co.uk/ServiceInfoB2
+uk.co.glucorx.modus.v1alpha2BServiceInfoProtoPbproto3

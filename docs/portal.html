@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="MODUS"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+	  <meta http-equiv="Expires" content="0" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+    <title>CGMx1</title>
+    <!--
+      CSP connect-src MUST list every host the browser talks to: the v3 Connect
+      API (modapi) + BOTH Keycloak IdPs — the patient realm
+      (keycloak.dev.platform.glucorx.co.uk) AND the clinic/HCP realm
+      (auth.grxdiscovery.link). The clinic portal's OIDC token exchange is a
+      fetch() to auth.grxdiscovery.link; omitting it here makes the browser block
+      the token POST ("Refused to connect … violates CSP") → clinic sign-in fails
+      after MFA with "Sign-in didn't complete" while patient login still works.
+      (Previously used https://modapi.grxdiscovery.link, which was empty after the v3 cutover
+      → the browser blocked every API call post-login.)
+      For a different environment, update these hosts.
+    -->
+    <meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https://modapi.grxdiscovery.link https://keycloak.dev.platform.glucorx.co.uk https://auth.grxdiscovery.link; frame-src 'self' https://keycloak.dev.platform.glucorx.co.uk https://auth.grxdiscovery.link;"
+/>
+
+
+
+    <script type="module" crossorigin src="/assets/index-eCOT24SD.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-nE_ROUT1.css">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root" style="background-color: #fff"></div>
+  </body>
+</html>

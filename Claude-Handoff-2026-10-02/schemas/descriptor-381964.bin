@@ -1,0 +1,30 @@
+
+!glucorx/modus/v1alpha2/push.protoglucorx.modus.v1alpha2"é
+
+PushTarget
+name (	B‡A:
+platform (2 .glucorx.modus.v1alpha2.PlatformB‡A‡A
+token (	B‡A‡A4
+create_time (2.google.protobuf.TimestampB‡A:dÍAa
+modus.glucorx.co.uk/PushTarget&users/{user}/pushTargets/{push_target}*pushTargets2
+pushTarget"â
+CreatePushTargetRequest0
+parent (	B ‡A˙A
+modus.glucorx.co.uk/User<
+push_target (2".glucorx.modus.v1alpha2.PushTargetB‡A"L
+GetPushTargetRequest4
+name (	B&‡A˙A 
+modus.glucorx.co.uk/PushTarget"{
+ListPushTargetsRequest0
+parent (	B ‡A˙A
+modus.glucorx.co.uk/User
+	page_size (B‡A
+
+page_token (	B‡A"l
+ListPushTargetsResponse8
+push_targets (2".glucorx.modus.v1alpha2.PushTarget
+next_page_token (	"O
+DeletePushTargetRequest4
+name (	B&‡A˙A 
+modus.glucorx.co.uk/PushTargetB+
+uk.co.glucorx.modus.v1alpha2B	PushProtoPbproto3

@@ -1,0 +1,665 @@
+// (-- api-linter: core::0140::abbreviations=disabled
+//     aip.dev/not-precedent: "Statistics" is the precise clinical term; the
+//     informal "Stats" is avoided in this external medical API. --)
+
+syntax = "proto3";
+
+package glucorx.modus.v1alpha2;
+
+import "glucorx/modus/v1alpha2/alarm.proto";
+import "glucorx/modus/v1alpha2/binding.proto";
+import "glucorx/modus/v1alpha2/calibration.proto";
+import "glucorx/modus/v1alpha2/event.proto";
+import "glucorx/modus/v1alpha2/export.proto";
+import "glucorx/modus/v1alpha2/firmware.proto";
+import "glucorx/modus/v1alpha2/glucose.proto";
+import "glucorx/modus/v1alpha2/grant.proto";
+import "glucorx/modus/v1alpha2/patient.proto";
+import "glucorx/modus/v1alpha2/practice.proto";
+import "glucorx/modus/v1alpha2/push.proto";
+import "glucorx/modus/v1alpha2/reading.proto";
+import "glucorx/modus/v1alpha2/recall.proto";
+import "glucorx/modus/v1alpha2/service_info.proto";
+import "glucorx/modus/v1alpha2/session.proto";
+import "glucorx/modus/v1alpha2/terms.proto";
+import "glucorx/modus/v1alpha2/user.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/longrunning/operations.proto";
+
+option java_package = "uk.co.glucorx.modus.v1alpha2";
+option java_multiple_files = true;
+option java_outer_classname = "AppServiceProto";
+
+// The end-user surface of the Modus API, used by the first-party mobile app and
+// any other patient-facing client.
+//
+// It serves both wearers, who administer their own and their dependants'
+// patients, and followers, who have been granted read-only access to someone
+// else's patient. The difference between them is authorisation, not a different
+// set of methods: every caller authenticates in the end-user identity realm and
+// is then scoped to exactly the patients and operations they are entitled to.
+//
+// Most methods are gated on acceptance of the current Modus terms (see
+// `TermsAcceptance` for the gate and its exemptions).
+// (-- api-linter: core::0121::resource-must-support-list=disabled
+//     aip.dev/not-precedent: end users address only their own account via
+//     `GetUser` with `users/me`; the listable user collection is exposed only on
+//     the administrative surface. --)
+service AppService {
+  option (google.api.default_host) = "modus.glucorx.co.uk";
+
+  // Retrieves the serving backend's facts: authoritative server time, build
+  // and contract versions, the app support window, and the terms the caller
+  // must have accepted. Never gated on terms.
+  rpc GetServiceInfo(GetServiceInfoRequest) returns (ServiceInfo) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=serviceInfo}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Retrieves an account. Use the alias `users/me` to fetch the calling
+  // account. Accounts are provisioned automatically on first use, so this
+  // succeeds for any authenticated principal.
+  rpc GetUser(GetUserRequest) returns (User) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=users/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Records the calling account's acceptance of a Modus terms document version
+  // currently in force. Never gated on terms.
+  rpc CreateTermsAcceptance(CreateTermsAcceptanceRequest)
+      returns (TermsAcceptance) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=users/*}/termsAcceptances"
+      body: "terms_acceptance"
+    };
+    option (google.api.method_signature) = "parent,terms_acceptance";
+  }
+
+  // Retrieves a single terms-acceptance record. Never gated on terms.
+  rpc GetTermsAcceptance(GetTermsAcceptanceRequest) returns (TermsAcceptance) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=users/*/termsAcceptances/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists the calling account's terms-acceptance records. Never gated on
+  // terms.
+  rpc ListTermsAcceptances(ListTermsAcceptancesRequest)
+      returns (ListTermsAcceptancesResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{parent=users/*}/termsAcceptances"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Registers a push destination for the calling account.
+  rpc CreatePushTarget(CreatePushTargetRequest) returns (PushTarget) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=users/*}/pushTargets"
+      body: "push_target"
+    };
+    option (google.api.method_signature) = "parent,push_target";
+  }
+
+  // Retrieves a single registered push destination.
+  rpc GetPushTarget(GetPushTargetRequest) returns (PushTarget) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=users/*/pushTargets/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists the calling account's registered push destinations.
+  rpc ListPushTargets(ListPushTargetsRequest) returns (ListPushTargetsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{parent=users/*}/pushTargets"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Deletes a push destination, for example when its platform token rotates.
+  rpc DeletePushTarget(DeletePushTargetRequest) returns (PushTarget) {
+    option (google.api.http) = {
+      delete: "/v1alpha2/{name=users/*/pushTargets/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Starts a long-running export of everything the calling account owns, for
+  // data-portability and access requests. The operation's response carries a
+  // short-lived link to a zip of CSV files. Never gated on terms.
+  rpc ExportUserData(ExportUserDataRequest)
+      returns (google.longrunning.Operation) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=users/*}:exportUserData"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name";
+    option (google.longrunning.operation_info) = {
+      response_type: "ExportUserDataResponse"
+      metadata_type: "ExportUserDataMetadata"
+    };
+  }
+
+  // Creates a patient. The calling account becomes the new patient's first
+  // administrator automatically.
+  rpc CreatePatient(CreatePatientRequest) returns (Patient) {
+    option (google.api.http) = {
+      post: "/v1alpha2/patients"
+      body: "patient"
+    };
+    option (google.api.method_signature) = "patient,patient_id";
+  }
+
+  // Retrieves a single patient by resource name.
+  rpc GetPatient(GetPatientRequest) returns (Patient) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists the patients the caller is entitled to see: those the caller
+  // administers, plus any shared to the caller as a follower.
+  rpc ListPatients(ListPatientsRequest) returns (ListPatientsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/patients"
+    };
+  }
+
+  // Updates mutable fields of a patient, such as its display name or time zone.
+  rpc UpdatePatient(UpdatePatientRequest) returns (Patient) {
+    option (google.api.http) = {
+      patch: "/v1alpha2/{patient.name=patients/*}"
+      body: "patient"
+    };
+    option (google.api.method_signature) = "patient,update_mask";
+  }
+
+  // Deletes a patient and begins erasure of its health data. Refused if the
+  // caller is not an administrator of the patient. The response carries an
+  // erasure reference the requester keeps for any later complaint. Never gated
+  // on terms.
+  // (-- api-linter: core::0135::response-message-name=disabled
+  //     aip.dev/not-precedent: deletion starts an erasure and must hand the
+  //     requester an erasure reference alongside the deleted patient. --)
+  rpc DeletePatient(DeletePatientRequest) returns (DeletePatientResponse) {
+    option (google.api.http) = {
+      delete: "/v1alpha2/{name=patients/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Invites a user to co-administer a patient. The link is created `PENDING`
+  // and grants no access until the invited user accepts.
+  rpc CreateAdministrator(CreateAdministratorRequest) returns (Administrator) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=patients/*}/administrators"
+      body: "administrator"
+    };
+    option (google.api.method_signature) =
+        "parent,administrator,administrator_id";
+  }
+
+  // Retrieves a single administrator link by resource name.
+  rpc GetAdministrator(GetAdministratorRequest) returns (Administrator) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/administrators/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists the administrators of a patient, including any pending invitations.
+  rpc ListAdministrators(ListAdministratorsRequest)
+      returns (ListAdministratorsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{parent=patients/*}/administrators"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Removes an administrator from a patient. Refused if it would leave the
+  // patient with no administrators.
+  rpc DeleteAdministrator(DeleteAdministratorRequest) returns (Administrator) {
+    option (google.api.http) = {
+      delete: "/v1alpha2/{name=patients/*/administrators/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Accepts a pending administrator invitation. The caller must be the invited
+  // user. The link becomes `ACTIVE`.
+  rpc AcceptAdministrator(AcceptAdministratorRequest) returns (Administrator) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*/administrators/*}:accept"
+      body: "*"
+    };
+  }
+
+  // Declines a pending administrator invitation. The caller must be the invited
+  // user. The link is deleted.
+  rpc DeclineAdministrator(DeclineAdministratorRequest)
+      returns (Administrator) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*/administrators/*}:decline"
+      body: "*"
+    };
+  }
+
+  // Retrieves a patient's alert thresholds and preferences.
+  rpc GetPatientSettings(GetPatientSettingsRequest) returns (PatientSettings) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/settings}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Updates a patient's alert thresholds and preferences.
+  rpc UpdatePatientSettings(UpdatePatientSettingsRequest)
+      returns (PatientSettings) {
+    option (google.api.http) = {
+      patch: "/v1alpha2/{patient_settings.name=patients/*/settings}"
+      body: "patient_settings"
+    };
+    option (google.api.method_signature) = "patient_settings,update_mask";
+  }
+
+  // Pairs a new transmitter to the calling patient. The app relays the
+  // transmitter's Diffie-Hellman challenge; the response carries the derived
+  // session key for the app and a token to relay back to the transmitter.
+  rpc RegisterTransmitter(RegisterTransmitterRequest)
+      returns (RegisterTransmitterResponse) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=transmitters/*}:register"
+      body: "*"
+    };
+  }
+
+  // Retrieves one of a patient's device bindings.
+  rpc GetDevice(GetDeviceRequest) returns (Device) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/devices/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists a patient's bound devices.
+  rpc ListDevices(ListDevicesRequest) returns (ListDevicesResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{parent=patients/*}/devices"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Releases a transmitter by deleting its binding. The transmitter can then be
+  // claimed by another account, and the device wipes its data on the next
+  // registration.
+  rpc DeleteDevice(DeleteDeviceRequest) returns (Device) {
+    option (google.api.http) = {
+      delete: "/v1alpha2/{name=patients/*/devices/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Resolves whether a transmitter should update, given the image it reports
+  // running. Returns the next patch to apply, or that the device is up to date.
+  // An update may be urged but the device is never held. The server decides the
+  // target; the app does not choose.
+  rpc ResolveTransmitterUpdate(ResolveTransmitterUpdateRequest)
+      returns (ResolveTransmitterUpdateResponse) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{transmitter=transmitters/*}:resolveUpdate"
+      body: "*"
+    };
+  }
+
+  // Lists recalls so the app can mirror them locally and enforce them at session
+  // start, including with no connectivity. Filter by `state = ACTIVE` to sync
+  // only those in force.
+  rpc ListRecalls(ListRecallsRequest) returns (ListRecallsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/recalls"
+    };
+  }
+
+  // Retrieves a single recall.
+  rpc GetRecall(GetRecallRequest) returns (Recall) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=recalls/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Starts a wear session. The sensor is validated server-side (known,
+  // unexpired, not recalled) and the transmitter must be bound to the patient.
+  rpc CreateSession(CreateSessionRequest) returns (Session) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=patients/*}/sessions"
+      body: "session"
+    };
+    option (google.api.method_signature) = "parent,session,session_id";
+  }
+
+  // Retrieves a single session by resource name.
+  rpc GetSession(GetSessionRequest) returns (Session) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/sessions/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists a patient's sessions, most recent first.
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{parent=patients/*}/sessions"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Ends a session explicitly. The session moves to `ENDED`.
+  rpc StopSession(StopSessionRequest) returns (Session) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*/sessions/*}:stop"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Writes readings to a session. Idempotent on each reading's identity, so
+  // re-uploading (including from a second phone) is safe.
+  rpc WriteReadings(WriteReadingsRequest) returns (WriteReadingsResponse) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=patients/*/sessions/*}/readings:write"
+      body: "*"
+    };
+  }
+
+  // Reads readings back by range, for one session or, using `-` as the session
+  // id, across all of a patient's sessions.
+  rpc QueryReadings(QueryReadingsRequest) returns (QueryReadingsResponse) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=patients/*/sessions/*}/readings:query"
+      body: "*"
+    };
+  }
+
+  // Records a manual calibration against a session.
+  rpc CreateCalibration(CreateCalibrationRequest) returns (Calibration) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=patients/*/sessions/*}/calibrations"
+      body: "calibration"
+    };
+    option (google.api.method_signature) = "parent,calibration,calibration_id";
+  }
+
+  // Retrieves a single calibration by resource name.
+  rpc GetCalibration(GetCalibrationRequest) returns (Calibration) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/sessions/*/calibrations/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists a session's calibrations, most recent first.
+  rpc ListCalibrations(ListCalibrationsRequest)
+      returns (ListCalibrationsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{parent=patients/*/sessions/*}/calibrations"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Records a lifestyle event (insulin or carbohydrate) for a patient.
+  // Idempotent on `request_id`, so an offline queue replays safely.
+  rpc CreateEvent(CreateEventRequest) returns (Event) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=patients/*}/events"
+      body: "event"
+    };
+    option (google.api.method_signature) = "parent,event";
+  }
+
+  // Retrieves a single event by resource name.
+  rpc GetEvent(GetEventRequest) returns (Event) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/events/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists a patient's events, most recent first.
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{parent=patients/*}/events"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Updates a previously recorded event.
+  rpc UpdateEvent(UpdateEventRequest) returns (Event) {
+    option (google.api.http) = {
+      patch: "/v1alpha2/{event.name=patients/*/events/*}"
+      body: "event"
+    };
+    option (google.api.method_signature) = "event,update_mask";
+  }
+
+  // Deletes an event.
+  rpc DeleteEvent(DeleteEventRequest) returns (Event) {
+    option (google.api.http) = {
+      delete: "/v1alpha2/{name=patients/*/events/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Records an alarm the phone raised (recall, glucose threshold, or no data).
+  // Append-only and idempotent on `request_id`; the phone is the source of
+  // truth and the backend keeps each raise as an audit entry.
+  rpc CreateAlarm(CreateAlarmRequest) returns (Alarm) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=patients/*}/alarms"
+      body: "alarm"
+    };
+    option (google.api.method_signature) = "parent,alarm";
+  }
+
+  // Retrieves a single alarm by resource name.
+  rpc GetAlarm(GetAlarmRequest) returns (Alarm) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/alarms/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists a patient's alarm history, most recently raised first, so a fresh
+  // install can restore it and carers can review past raises.
+  rpc ListAlarms(ListAlarmsRequest) returns (ListAlarmsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{parent=patients/*}/alarms"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Retrieves the patient's current glucose: the latest value for each active
+  // session, with trend and freshness. The cheap "right now" read.
+  rpc GetCurrentGlucose(GetCurrentGlucoseRequest) returns (CurrentGlucose) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/currentGlucose}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Retrieves the patient's glucose statistics across the standard reporting
+  // windows.
+  rpc GetGlucoseStatistics(GetGlucoseStatisticsRequest)
+      returns (GlucoseStatistics) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/glucoseStatistics}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Reads the patient's change feed after a cursor. The resumable source of
+  // truth for followers; readings, events, alarms, and settings changes
+  // interleaved in order.
+  rpc QueryPatientChanges(QueryPatientChangesRequest)
+      returns (QueryPatientChangesResponse) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=patients/*}/changes:query"
+      body: "*"
+    };
+  }
+
+  // Opens the live change feed: replays changes after the resume cursor, then
+  // streams new ones. An accelerator over `QueryPatientChanges`, not a
+  // replacement for it.
+  // (-- api-linter: core::0136::response-message-name=disabled
+  //     aip.dev/not-precedent: this server stream yields the shared feed entry
+  //     type `PatientChange`, the same elements `QueryPatientChanges` returns. --)
+  rpc WatchPatient(WatchPatientRequest) returns (stream PatientChange) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*}:watch"
+      body: "*"
+    };
+  }
+
+  // Creates a grant: invites a follower (set `grant.follower`). Practice
+  // shares are always practice-initiated via the clinical surface's
+  // `RequestGrant` and approved by the patient here.
+  rpc CreateGrant(CreateGrantRequest) returns (Grant) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{parent=patients/*}/grants"
+      body: "grant"
+    };
+    option (google.api.method_signature) = "parent,grant,grant_id";
+  }
+
+  // Retrieves a single grant by resource name.
+  rpc GetGrant(GetGrantRequest) returns (Grant) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=patients/*/grants/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists a patient's grants, including pending ones, so the patient can see
+  // who has access.
+  rpc ListGrants(ListGrantsRequest) returns (ListGrantsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{parent=patients/*}/grants"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Updates a grant's granular sharing scope after creation. Only
+  // `shared_categories` may be changed; any other path is rejected.
+  //
+  // GlucoRx divergence, RETAINED together with `Grant.shared_categories` — it is
+  // the only way a patient can NARROW what an existing follower sees without
+  // revoking and re-inviting them.
+  rpc UpdateGrant(UpdateGrantRequest) returns (Grant) {
+    option (google.api.http) = {
+      patch: "/v1alpha2/{grant.name=patients/*/grants/*}"
+      body: "grant"
+    };
+    option (google.api.method_signature) = "grant,update_mask";
+  }
+
+  // Lists the grants for which the caller is the invited/active follower — the
+  // "shared with me" inbox — so a follower can discover a pending invitation
+  // (matched on their verified email) and Accept or Decline it.
+  //
+  // GlucoRx divergence, RETAINED. It was already a divergence in v1alpha1: the
+  // upstream contract has never had follower-side grant discovery, and v1alpha2
+  // removed it again. There is NO replacement — `ListGrants` requires a
+  // `patients/{patient}` parent, which is the OUTGOING direction and is precisely
+  // what a follower does not have before accepting, and `AcceptGrant` needs a
+  // full grant resource name obtainable only out-of-band. Without this RPC a
+  // follower has no in-app way to see an invitation at all.
+  rpc ListIncomingGrants(ListIncomingGrantsRequest) returns (ListGrantsResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/incomingGrants"
+    };
+  }
+
+  // Revokes an active grant. Access ends on the recipient's next request.
+  rpc RevokeGrant(RevokeGrantRequest) returns (Grant) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*/grants/*}:revoke"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Accepts a follower invitation. The caller must be the invited follower.
+  rpc AcceptGrant(AcceptGrantRequest) returns (Grant) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*/grants/*}:accept"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Declines a follower invitation. The caller must be the invited follower.
+  rpc DeclineGrant(DeclineGrantRequest) returns (Grant) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*/grants/*}:decline"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Ends the caller's own accepted follower grant. The caller must be the
+  // bound follower; access ends immediately and rejoining needs a fresh
+  // invitation.
+  rpc LeaveGrant(LeaveGrantRequest) returns (Grant) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*/grants/*}:leave"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Approves a practice's access request. The patient calls this; the grant
+  // becomes `ACTIVE`.
+  rpc ApproveGrant(ApproveGrantRequest) returns (Grant) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*/grants/*}:approve"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Denies a practice's access request. The patient calls this; the grant
+  // becomes `REJECTED`.
+  rpc DenyGrant(DenyGrantRequest) returns (Grant) {
+    option (google.api.http) = {
+      post: "/v1alpha2/{name=patients/*/grants/*}:deny"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Retrieves a practice by resource name, for the patient to review before
+  // sharing.
+  rpc GetPractice(GetPracticeRequest) returns (Practice) {
+    option (google.api.http) = {
+      get: "/v1alpha2/{name=practices/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Lists practices for discovery, filtered by name or locality, so the patient
+  // can find the one to share with.
+  rpc ListPractices(ListPracticesRequest) returns (ListPracticesResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha2/practices"
+    };
+  }
+}

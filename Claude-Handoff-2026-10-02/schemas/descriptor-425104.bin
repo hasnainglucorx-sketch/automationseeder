@@ -1,0 +1,68 @@
+
+*glucorx/modus/v1alpha2/admin_service.protoglucorx.modus.v1alpha2"t
+CreateUserRequest
+email (	B‡A
+display_name (	B‡A
+roles (	B‡A
+send_invitation (B‡A"@
+SetUserEnabledRequest
+name (	B‡A
+enabled (B‡A":
+AddUserRoleRequest
+name (	B‡A
+role (	B‡A"=
+RemoveUserRoleRequest
+name (	B‡A
+role (	B‡A"&
+DeleteUserRequest
+name (	B‡A".
+DeleteUserResponse
+identity_removed ("q
+ ListPendingAdministratorsRequest
+	page_size (B‡A
+
+page_token (	B‡A
+include_expired (B‡A"÷
+PendingAdministrator
+name (	
+email (	B‡A
+display_name (	B‡A5
+pending_time (2.google.protobuf.TimestampB‡A4
+expire_time (2.google.protobuf.TimestampB‡A
+expired (B‡A"Ç
+!ListPendingAdministratorsResponseD
+administrators (2,.glucorx.modus.v1alpha2.PendingAdministrator
+next_page_token (	"F
+ActivateAdministratorRequest
+name (	B‡A
+reason (	B‡A2æ!
+AdminServiceó
+GetServiceInfo-.glucorx.modus.v1alpha2.GetServiceInfoRequest#.glucorx.modus.v1alpha2.ServiceInfo"1⁄AnameÇ”‰ì$"/v1alpha2/admin/{name=serviceInfo}
+	ListUsers(.glucorx.modus.v1alpha2.ListUsersRequest).glucorx.modus.v1alpha2.ListUsersResponse"Ç”‰ì/v1alpha2/admin/users~
+GetUser&.glucorx.modus.v1alpha2.GetUserRequest.glucorx.modus.v1alpha2.User"-⁄AnameÇ”‰ì /v1alpha2/admin/{name=users/*}µ
+ListPracticeApplications7.glucorx.modus.v1alpha2.ListPracticeApplicationsRequest8.glucorx.modus.v1alpha2.ListPracticeApplicationsResponse"&Ç”‰ì /v1alpha2/practiceApplications¥
+GetPracticeApplication5.glucorx.modus.v1alpha2.GetPracticeApplicationRequest+.glucorx.modus.v1alpha2.PracticeApplication"6⁄AnameÇ”‰ì)'/v1alpha2/{name=practiceApplications/*}Ω
+DecidePracticeApplication8.glucorx.modus.v1alpha2.DecidePracticeApplicationRequest+.glucorx.modus.v1alpha2.PracticeApplication"9Ç”‰ì3:*"./v1alpha2/{name=practiceApplications/*}:decide¿
+AddPracticeApplicationNote9.glucorx.modus.v1alpha2.AddPracticeApplicationNoteRequest+.glucorx.modus.v1alpha2.PracticeApplication":Ç”‰ì4:*"//v1alpha2/{name=practiceApplications/*}:addNoteœ
+ResendPracticeApplicationNotice>.glucorx.modus.v1alpha2.ResendPracticeApplicationNoticeRequest+.glucorx.modus.v1alpha2.PracticeApplication"?Ç”‰ì9:*"4/v1alpha2/{name=practiceApplications/*}:resendNotice•
+CreatePractice-.glucorx.modus.v1alpha2.CreatePracticeRequest .glucorx.modus.v1alpha2.Practice"B⁄Apractice,practice_idÇ”‰ì%:practice"/v1alpha2/admin/practicesé
+GetPractice*.glucorx.modus.v1alpha2.GetPracticeRequest .glucorx.modus.v1alpha2.Practice"1⁄AnameÇ”‰ì$"/v1alpha2/admin/{name=practices/*}è
+ListPractices,.glucorx.modus.v1alpha2.ListPracticesRequest-.glucorx.modus.v1alpha2.ListPracticesResponse"!Ç”‰ì/v1alpha2/admin/practices∑
+UpdatePractice-.glucorx.modus.v1alpha2.UpdatePracticeRequest .glucorx.modus.v1alpha2.Practice"T⁄Apractice,update_maskÇ”‰ì7:practice2+/v1alpha2/admin/{practice.name=practices/*}≥
+CreateMember+.glucorx.modus.v1alpha2.CreateMemberRequest.glucorx.modus.v1alpha2.Member"V⁄Aparent,member,member_idÇ”‰ì6:member",/v1alpha2/admin/{parent=practices/*}/membersí
+	GetMember(.glucorx.modus.v1alpha2.GetMemberRequest.glucorx.modus.v1alpha2.Member";⁄AnameÇ”‰ì.,/v1alpha2/admin/{name=practices/*/members/*}•
+ListMembers*.glucorx.modus.v1alpha2.ListMembersRequest+.glucorx.modus.v1alpha2.ListMembersResponse"=⁄AparentÇ”‰ì.,/v1alpha2/admin/{parent=practices/*}/membersò
+DeleteMember+.glucorx.modus.v1alpha2.DeleteMemberRequest.glucorx.modus.v1alpha2.Member";⁄AnameÇ”‰ì.*,/v1alpha2/admin/{name=practices/*/members/*}∂
+QueryReadings,.glucorx.modus.v1alpha2.QueryReadingsRequest-.glucorx.modus.v1alpha2.QueryReadingsResponse"HÇ”‰ìB:*"=/v1alpha2/admin/{parent=patients/*/sessions/*}/readings:query¶
+GetPlatformStatistics4.glucorx.modus.v1alpha2.GetPlatformStatisticsRequest*.glucorx.modus.v1alpha2.PlatformStatistics"+Ç”‰ì%#/v1alpha2/admin/platform:statisticsê
+GetSystemHealth..glucorx.modus.v1alpha2.GetSystemHealthRequest$.glucorx.modus.v1alpha2.SystemHealth"'Ç”‰ì!/v1alpha2/admin/platform:healthw
+
+CreateUser).glucorx.modus.v1alpha2.CreateUserRequest.glucorx.modus.v1alpha2.User" Ç”‰ì:*"/v1alpha2/admin/usersø
+ListPendingAdministrators8.glucorx.modus.v1alpha2.ListPendingAdministratorsRequest9.glucorx.modus.v1alpha2.ListPendingAdministratorsResponse"-Ç”‰ì'%/v1alpha2/admin/pendingAdministrators¨
+ActivateAdministrator4.glucorx.modus.v1alpha2.ActivateAdministratorRequest.glucorx.modus.v1alpha2.User"?Ç”‰ì9:*"4/v1alpha2/admin/{name=users/*}:activateAdministratorì
+SetUserEnabled-.glucorx.modus.v1alpha2.SetUserEnabledRequest.glucorx.modus.v1alpha2.User"4Ç”‰ì.:*")/v1alpha2/admin/{name=users/*}:setEnabledä
+AddUserRole*.glucorx.modus.v1alpha2.AddUserRoleRequest.glucorx.modus.v1alpha2.User"1Ç”‰ì+:*"&/v1alpha2/admin/{name=users/*}:addRoleì
+RemoveUserRole-.glucorx.modus.v1alpha2.RemoveUserRoleRequest.glucorx.modus.v1alpha2.User"4Ç”‰ì.:*")/v1alpha2/admin/{name=users/*}:removeRoleã
+
+DeleteUser).glucorx.modus.v1alpha2.DeleteUserRequest*.glucorx.modus.v1alpha2.DeleteUserResponse"&Ç”‰ì */v1alpha2/admin/{name=users/*} Amodus.glucorx.co.ukB3
+uk.co.glucorx.modus.v1alpha2BAdminServiceProtoPbproto3

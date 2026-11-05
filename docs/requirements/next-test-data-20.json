@@ -1,0 +1,22 @@
+[
+  {"id":"VP-APP-HOSTED-REG-005","account":"TEMP-REGISTRATION","resource":"PASSWORD-POLICY-01","mode":"manual-input","api_seedable":false},
+  {"id":"VP-APP-NOTIFY-015","account":"QA-ALARM-LIVE-01","resource":"CONTROLLED-SERVICE-OUTAGE-24H","mode":"hybrid-environment","api_seedable":false},
+  {"id":"VP-APP-NOTIFY-020","account":"QA-ALARM-LIVE-01","resource":"BUILD-UPDATE-01","mode":"controlled-build","api_seedable":false},
+  {"id":"VP-APP-MEDIUM-002","account":"QA-ALARM-LIVE-01","resource":"KIT-LIVE-01","mode":"live-device","api_seedable":false},
+  {"id":"VP-APP-MEDIUM-003","account":"QA-ALARM-LIVE-01","resource":"KIT-LIVE-01-MISSING-TREND","mode":"packet-sequence","api_seedable":false},
+  {"id":"VP-APP-CRITICAL-013","account":"QA-ALARM-LIVE-01","resource":"KIT-LIVE-01-NODATA-ESCALATION","mode":"live-device","api_seedable":false},
+  {"id":"VP-APP-CRITICAL-014","account":"QA-ALARM-LIVE-01","resource":"KIT-LIVE-01-SLEEP","mode":"live-device-os-sleep","api_seedable":false},
+  {"id":"VP-APP-CRITICAL-015","account":"QA-ALARM-LIVE-01","resource":"KIT-LIVE-01-OFFLINE-WRONG-TIME","mode":"live-device-time","api_seedable":false},
+  {"id":"VP-APP-CRITICAL-018","account":"QA-ALARM-LIVE-01","resource":"KIT-LIVE-01-FUTURE-DRIFT","mode":"packet-sequence","api_seedable":false},
+  {"id":"VP-APP-CRITICAL-019","account":"QA-ALARM-LIVE-01","resource":"KIT-LIVE-01-MEDIUM-REPEAT","mode":"live-device-notification","api_seedable":false},
+  {"id":"VP-APP-SCAN-003","account":"QA-SENSOR-SETUP-01","resource":"SENSOR-VALID-01","mode":"camera-scan","api_seedable":false},
+  {"id":"VP-APP-SCAN-008","account":"QA-SENSOR-SETUP-01","resource":"SENSOR-VALID-01","mode":"camera-scan","api_seedable":false},
+  {"id":"VP-APP-SCAN-009","account":"QA-SENSOR-SETUP-01","resource":"BARCODE-WRONGTYPE-01","mode":"camera-negative","api_seedable":false},
+  {"id":"VP-APP-SCAN-010","account":"QA-SENSOR-SETUP-01","resource":"SENSOR-EXPIRED-01","mode":"camera-expiry","api_seedable":false},
+  {"id":"VP-APP-SCAN-011","account":"QA-SENSOR-SETUP-01","resource":"SENSOR-RECALLED-01","mode":"camera-recall","api_seedable":false},
+  {"id":"VP-APP-SENSOR-ID-003","account":"QA-SENSOR-SETUP-01","resource":"SENSOR-VALID-01","mode":"manual-id","api_seedable":false},
+  {"id":"VP-APP-SENSOR-ID-004","account":"QA-SENSOR-SETUP-01","resource":"SENSOR-INVALID-01","mode":"manual-id-negative","api_seedable":false},
+  {"id":"VP-APP-SENSOR-ID-005","account":"QA-SENSOR-SETUP-01","resource":"SENSOR-VALID-01","mode":"manual-id-confirmation","api_seedable":false},
+  {"id":"VP-APP-SENSOR-ID-006","account":"QA-SENSOR-SETUP-01","resource":"SENSOR-EXPIRED-01","mode":"manual-id-expiry","api_seedable":false},
+  {"id":"VP-APP-SENSOR-ID-007","account":"QA-SENSOR-SETUP-01","resource":"SENSOR-VALID-01","mode":"manual-id-offline","api_seedable":false}
+]

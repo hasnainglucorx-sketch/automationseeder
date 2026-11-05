@@ -1,0 +1,1016 @@
+[
+  {
+    "id": "VP-APP-HOSTED-SIGNIN-007",
+    "title": "26. VP-APP-HOSTED-SIGNIN-007 \u2014 Unverified account login and activation-email resend",
+    "references": [],
+    "precondition": "Preconditions: User is logged out; internet is available. Protocol Test Data identifies a registered account whose email activation is incomplete, its correct password, and an inbox accessible to the tester. Record the account identifier in the execution record.",
+    "mentions": [
+      "Preconditions: User is logged out; internet is available. Protocol Test Data identifies a registered account whose email activation is incomplete, its correct password, and an inbox accessible to the tester. Record the account identifier in the execution record."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-789 / DO-810\nPreconditions: User is logged out; internet is available. Protocol Test Data identifies a registered account whose email activation is incomplete, its correct password, and an inbox accessible to the tester. Record the account identifier in the execution record.\nProcedure:\n1. Launch CGMx 1, then from Native Sign In tap Sign in.\n2. Enter the unverified account email and correct password, then tap Sign In.\n3. Confirm a re-send verification action is available and select it once.\n4. Open the registered test inbox and confirm that a new activation/verification email is received. Do not use the link during this case.\nExpected result:\n1. Hosted Sign In page opens.\n2. The unverified account does not enter the authenticated application; the hosted flow shows that email verification/activation is required.\n3. Selecting re-send causes a new activation/verification email to be sent to the registered test address.\n4. The account remains unverified until a valid activation link is completed, and the new email arrives at the registered inbox.\nRequired evidence: Activation-required screen; re-send action/result; received activation email showing recipient and language; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-SIGNIN-013",
+    "title": "32. VP-APP-HOSTED-SIGNIN-013 \u2014 Login flow in every supported language",
+    "references": [],
+    "precondition": "Preconditions: User is logged out; internet is available. The protocol Test Data table lists every supported application language for the build under test. Record that language list before execution.",
+    "mentions": [
+      "Preconditions: User is logged out; internet is available. The protocol Test Data table lists every supported application language for the build under test. Record that language list before execution.",
+      "2. For each supported language listed in Test Data, select that language.",
+      "2. Every supported language listed in Test Data can be selected on the logged-out Sign In flow."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-284 / DO-672\nPreconditions: User is logged out; internet is available. The protocol Test Data table lists every supported application language for the build under test. Record that language list before execution.\nProcedure:\n1. Launch CGMx 1, then from Native Sign In tap Sign in to open the hosted Sign In page, and note the current language selector selection.\n2. For each supported language listed in Test Data, select that language.\n3. In each language, inspect the \u201cSign in to your account\u201d heading, Email field, Password field, Forgot Password action, Sign In button and Register link.\n4. With the credential fields empty, tap Sign In once and observe the required-field validation, then repeat for the next language.\nExpected result:\n1. Hosted Sign In page opens with a language selector.\n2. Every supported language listed in Test Data can be selected on the logged-out Sign In flow.\n3. The sign-in heading, field labels and actions are presented using the selected language resources.\n4. Empty-field validation is also presented in the selected language, and the page remains usable in each tested language regardless of device/account region.\nRequired evidence: One hosted Sign In screenshot and one validation screenshot per supported language; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-SIGNIN-014",
+    "title": "33. VP-APP-HOSTED-SIGNIN-014 \u2014 Apply account regional configuration after sign in",
+    "references": [],
+    "precondition": "Preconditions: User is logged out; internet is available. Protocol Test Data identifies a verified account with completed onboarding and records its account region/country, required glucose unit, supported or fallback app language, and any user-visible region-specific configuration available for manual verification.",
+    "mentions": [
+      "Preconditions: User is logged out; internet is available. Protocol Test Data identifies a verified account with completed onboarding and records its account region/country, required glucose unit, supported or fallback app language, and any user-visible region-specific configuration available for manual verification.",
+      "1. Record the expected account region/country, glucose unit and language from the protocol Test Data table.",
+      "4. Open a glucose-value or glucose-threshold screen identified in Test Data and record the displayed glucose unit.",
+      "1. The Test Data reference is recorded before execution.",
+      "3. The displayed Country/region matches the signed-in account configuration recorded in Test Data.",
+      "4. The displayed glucose unit matches Test Data and is applied consistently to the inspected clinical value/threshold screen.",
+      "5. The active language/fallback matches Test Data and no configuration from another previously used account is reused. (Internal regional server-routing selection is outside this manual check and requires its own non-manual evidence.)",
+      "Required evidence: Test Data account configuration; User Profile Country screenshot; glucose-unit screenshot; Settings > Language screenshot; execution record"
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-285 / DO-673\nPreconditions: User is logged out; internet is available. Protocol Test Data identifies a verified account with completed onboarding and records its account region/country, required glucose unit, supported or fallback app language, and any user-visible region-specific configuration available for manual verification.\nProcedure:\n1. Record the expected account region/country, glucose unit and language from the protocol Test Data table.\n2. Launch CGMx 1, then from Native Sign In tap Sign in, and sign in with the specified account.\n3. Open Settings > User Profile and record the displayed Country/region field.\n4. Open a glucose-value or glucose-threshold screen identified in Test Data and record the displayed glucose unit.\n5. Open Settings > Language and record the active language/fallback.\nExpected result:\n1. The Test Data reference is recorded before execution.\n2. Hosted Sign In opens and sign-in with the specified account succeeds.\n3. The displayed Country/region matches the signed-in account configuration recorded in Test Data.\n4. The displayed glucose unit matches Test Data and is applied consistently to the inspected clinical value/threshold screen.\n5. The active language/fallback matches Test Data and no configuration from another previously used account is reused. (Internal regional server-routing selection is outside this manual check and requires its own non-manual evidence.)\nRequired evidence: Test Data account configuration; User Profile Country screenshot; glucose-unit screenshot; Settings > Language screenshot; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-SIGNIN-015",
+    "title": "34. VP-APP-HOSTED-SIGNIN-015 \u2014 Re-present incomplete onboarding after subsequent login",
+    "references": [],
+    "precondition": "Preconditions: User is logged out. Protocol Test Data identifies a verified account whose server-side onboarding-completion state is documented as incomplete and provides valid credentials. Do not create or alter this state through backend manipulation.",
+    "mentions": [
+      "Preconditions: User is logged out. Protocol Test Data identifies a verified account whose server-side onboarding-completion state is documented as incomplete and provides valid credentials. Do not create or alter this state through backend manipulation.",
+      "1. Launch CGMx 1, then from Native Sign In tap Sign in, and sign in with the Test Data account.",
+      "1. Hosted Sign In opens and sign-in with the Test Data account succeeds.",
+      "3. The user is not granted normal clinical-feature access before the required onboarding flow is completed. If the specified incomplete-onboarding Test Data account is unavailable, execution is BLOCKED by Test Data dependency rather than creating the state by backend manipulation.",
+      "Required evidence: Screenshot of first screen after login; screenshot/recording of attempted clinical navigation where available; Test Data reference; execution record"
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-714 / DO-818\nPreconditions: User is logged out. Protocol Test Data identifies a verified account whose server-side onboarding-completion state is documented as incomplete and provides valid credentials. Do not create or alter this state through backend manipulation.\nProcedure:\n1. Launch CGMx 1, then from Native Sign In tap Sign in, and sign in with the Test Data account.\n2. Observe the first app-owned screen shown after authentication.\n3. Before completing onboarding, attempt to reach a clinical area such as Home, Reports or Journal using only navigation controls that are actually available.\nExpected result:\n1. Hosted Sign In opens and sign-in with the Test Data account succeeds.\n2. Because the account onboarding record is incomplete, the application presents the onboarding flow again from the first controlled onboarding step after login.\n3. The user is not granted normal clinical-feature access before the required onboarding flow is completed. If the specified incomplete-onboarding Test Data account is unavailable, execution is BLOCKED by Test Data dependency rather than creating the state by backend manipulation.\nRequired evidence: Screenshot of first screen after login; screenshot/recording of attempted clinical navigation where available; Test Data reference; execution record\nResult: Not run\nBatch 7 - Hosted Registration\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-002",
+    "title": "36. VP-APP-HOSTED-REG-002 \u2014 First-name validation",
+    "references": [],
+    "precondition": "Preconditions: Hosted Registration page is open; other required fields can be completed with valid test data.",
+    "mentions": [
+      "Preconditions: Hosted Registration page is open; other required fields can be completed with valid test data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Hosted Registration page is open; other required fields can be completed with valid test data.\nProcedure:\n1. Enter a valid first name such as \u201cDaniel\u201d, then clear the First name field.\n2. Leave First name empty, complete the other required fields with valid data, tap Register and observe the First name validation.\nExpected result:\n1. Normal alphabetic input is accepted and retained.\n2. Registration does not complete with First name empty and a clear required-field validation state/message is shown.\nRequired evidence: Screenshot(s)/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-003",
+    "title": "37. VP-APP-HOSTED-REG-003 \u2014 Last-name validation",
+    "references": [],
+    "precondition": "Preconditions: Hosted Registration page is open; other required fields can be completed with valid test data.",
+    "mentions": [
+      "Preconditions: Hosted Registration page is open; other required fields can be completed with valid test data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Hosted Registration page is open; other required fields can be completed with valid test data.\nProcedure:\n1. Enter a valid last name such as \u201cTaylor\u201d, then clear the Last name field.\n2. Leave Last name empty, complete the other required fields with valid data, tap Register and observe the Last name validation.\nExpected result:\n1. Normal alphabetic input is accepted and retained.\n2. Registration does not complete with Last name empty and a clear required-field validation state/message is shown.\nRequired evidence: Screenshot(s)/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-004",
+    "title": "38. VP-APP-HOSTED-REG-004 \u2014 Email validation",
+    "references": [],
+    "precondition": "Preconditions: Hosted Registration page is open; other required fields can be completed with valid test data.",
+    "mentions": [
+      "Preconditions: Hosted Registration page is open; other required fields can be completed with valid test data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Hosted Registration page is open; other required fields can be completed with valid test data.\nProcedure:\n1. Enter a valid-format email such as \u201cdaniel.taylor@example.com\u201d, then replace it with malformed text such as \u201cDaniel\u201d.\n2. Complete the other required fields, tap Register and observe the Email validation.\nExpected result:\n1. Valid-format email is accepted and retained.\n2. Malformed email is rejected, registration does not complete, and a clear email-validation state/message is shown.\nRequired evidence: Screenshot(s)/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-005",
+    "title": "39. VP-APP-HOSTED-REG-005 \u2014 Password-policy validation using controlled test data",
+    "references": [],
+    "precondition": "Preconditions: Hosted Registration page is open. The protocol Test Data table provides one password that violates a controlled password rule, one password that satisfies the controlled password rules, and identifies the specific rule being tested. Record both values/rule before execution.",
+    "mentions": [
+      "Preconditions: Hosted Registration page is open. The protocol Test Data table provides one password that violates a controlled password rule, one password that satisfies the controlled password rules, and identifies the specific rule being tested. Record both values/rule before execution.",
+      "1. Complete Email, First name, Last name and any other required registration fields with valid Test Data.",
+      "Required evidence: Completed Test Data reference; invalid-password validation screenshot; compliant-password state/result screenshot; execution record"
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Hosted Registration page is open. The protocol Test Data table provides one password that violates a controlled password rule, one password that satisfies the controlled password rules, and identifies the specific rule being tested. Record both values/rule before execution.\nProcedure:\n1. Complete Email, First name, Last name and any other required registration fields with valid Test Data.\n2. Enter the recorded non-compliant password in Password and Confirm password, then attempt Register.\n3. Record the validation shown for the controlled rule.\n4. Replace both password fields with the recorded compliant password and attempt Register again.\nExpected result:\n1. The recorded non-compliant password is not accepted for account registration and the hosted page presents a user-visible validation/rejection for the controlled rule.\n2. After both fields contain the recorded compliant password, password-policy validation no longer blocks registration.\n3. The app does not silently alter either entered password.\nRequired evidence: Completed Test Data reference; invalid-password validation screenshot; compliant-password state/result screenshot; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-006",
+    "title": "40. VP-APP-HOSTED-REG-006 \u2014 Confirm-password validation",
+    "references": [],
+    "precondition": "Preconditions: Hosted Registration page is open; Email, First name and Last name are completed with valid test data; a password value is available for testing.",
+    "mentions": [
+      "Preconditions: Hosted Registration page is open; Email, First name and Last name are completed with valid test data; a password value is available for testing."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Hosted Registration page is open; Email, First name and Last name are completed with valid test data; a password value is available for testing.\nProcedure:\n1. Enter different values in Password and Confirm password.\n2. Tap Register and observe the validation.\nExpected result:\n1. Mismatched Password and Confirm password values are rejected.\n2. A clear confirmation-mismatch validation state/message is shown and registration does not complete.\nRequired evidence: Screenshot(s)/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-007",
+    "title": "41. VP-APP-HOSTED-REG-007 \u2014 Existing registered email cannot create a duplicate account",
+    "references": [],
+    "precondition": "Preconditions: Hosted Registration page is open. Protocol Test Data identifies an email address that is already registered and supplies valid values for every other required registration field.",
+    "mentions": [
+      "Preconditions: Hosted Registration page is open. Protocol Test Data identifies an email address that is already registered and supplies valid values for every other required registration field.",
+      "1. Enter the already-registered Test Data email.",
+      "2. Complete Password, Confirm password, First name, Last name and any other required fields with the valid Test Data values."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Hosted Registration page is open. Protocol Test Data identifies an email address that is already registered and supplies valid values for every other required registration field.\nProcedure:\n1. Enter the already-registered Test Data email.\n2. Complete Password, Confirm password, First name, Last name and any other required fields with the valid Test Data values.\n3. Tap Register once.\n4. Observe the hosted response and confirm the user can still edit the form or return to Login.\nExpected result:\n1. Registration with the already-registered email does not create a second account and does not create an authenticated session.\n2. A user-visible rejection/validation response is presented for the attempted registration.\n3. The hosted registration flow remains recoverable so the user can correct the form or return to Login.\nRequired evidence: Registration form with controlled email; rejection/validation screenshot; recoverable hosted-registration state; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-008",
+    "title": "42. VP-APP-HOSTED-REG-008 \u2014 Required registration fields block incomplete submission",
+    "references": [],
+    "precondition": "Preconditions: Hosted Registration page is open. The captured approved page shows Email, Password, Confirm password, First name and Last name as registration fields; Protocol Test Data supplies valid values for them.",
+    "mentions": [
+      "Preconditions: Hosted Registration page is open. The captured approved page shows Email, Password, Confirm password, First name and Last name as registration fields; Protocol Test Data supplies valid values for them.",
+      "1. Leave Email empty, complete the other required fields with valid Test Data, and tap Register.",
+      "6. Complete all required fields with valid Test Data and confirm the form can proceed."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Hosted Registration page is open. The captured approved page shows Email, Password, Confirm password, First name and Last name as registration fields; Protocol Test Data supplies valid values for them.\nProcedure:\n1. Leave Email empty, complete the other required fields with valid Test Data, and tap Register.\n2. Repeat with Password empty.\n3. Repeat with Confirm password empty.\n4. Repeat with First name empty.\n5. Repeat with Last name empty.\n6. Complete all required fields with valid Test Data and confirm the form can proceed.\nExpected result:\n1. Registration does not complete while any required Email, Password, Confirm password, First name or Last name field is empty.\n2. The hosted page identifies the incomplete field through its user-visible validation/state.\n3. When all required fields contain valid data, required-field gating no longer prevents the registration submission.\nRequired evidence: One screenshot for each omitted required field or a recording covering the sequence; completed-valid form/result; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-009",
+    "title": "43. VP-APP-HOSTED-REG-009 \u2014 Registration submission",
+    "references": [],
+    "precondition": "Preconditions: Hosted Registration page is open; a new unregistered test email is available; all required fields can be completed with valid test data.",
+    "mentions": [
+      "Preconditions: Hosted Registration page is open; a new unregistered test email is available; all required fields can be completed with valid test data.",
+      "1. Complete all required fields with valid test data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Hosted Registration page is open; a new unregistered test email is available; all required fields can be completed with valid test data.\nProcedure:\n1. Complete all required fields with valid test data.\n2. Tap Register once and observe the result.\nExpected result:\n1. Registration is submitted successfully once.\n2. The flow advances to the Email verification state for the newly registered account without duplicate submission or unexpected error.\nRequired evidence: Screenshot(s)/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-017",
+    "title": "51. VP-APP-HOSTED-REG-017 \u2014 Registration flow in every supported language",
+    "references": [],
+    "precondition": "Preconditions: Protocol Test Data lists every supported application language for the build under test. The device can be set to each listed language using normal OS/app controls; user is logged out.",
+    "mentions": [
+      "Preconditions: Protocol Test Data lists every supported application language for the build under test. The device can be set to each listed language using normal OS/app controls; user is logged out.",
+      "1. For each supported language in Test Data, set the device/app to that language using the normal supported method and relaunch CGMx 1 logged out.",
+      "1. The registration flow can be reached and used in every supported language listed in Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-280 / DO-668\nPreconditions: Protocol Test Data lists every supported application language for the build under test. The device can be set to each listed language using normal OS/app controls; user is logged out.\nProcedure:\n1. For each supported language in Test Data, set the device/app to that language using the normal supported method and relaunch CGMx 1 logged out.\n2. Open Create Account and inspect the consent text plus Terms of Service and Privacy Policy links.\n3. Continue to the hosted Register page.\n4. Inspect Register heading, required-fields information, Email, Password, Confirm password, First name, Last name, Register and Back to Login.\n5. Leave one required field empty and tap Register to observe one inline/required-field validation.\n6. Open the Terms of Service and Privacy Policy links for that language and record the displayed document language. Repeat for every supported language.\nExpected result:\n1. The registration flow can be reached and used in every supported language listed in Test Data.\n2. Registration labels/actions and required-field validation use the active supported language resources.\n3. Terms of Service and Privacy Policy are accessible in the tested language, with any approved regional differences retained.\n4. No supported registration language is unavailable solely because of the current phone region.\nRequired evidence: Create Account and hosted Register screenshot per supported language; one validation screenshot per language; Terms/Privacy language evidence; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-018",
+    "title": "52. VP-APP-HOSTED-REG-018 \u2014 Select and lock the account region during registration",
+    "references": [],
+    "precondition": "Preconditions: Protocol Test Data identifies a registration region/country available to the test build and a fresh test email. All other required registration data are available.",
+    "mentions": [
+      "Preconditions: Protocol Test Data identifies a registration region/country available to the test build and a fresh test email. All other required registration data are available.",
+      "3. Select the Test Data region/country and complete registration, email activation and sign in through the normal user flow."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-281 / DO-669\nPreconditions: Protocol Test Data identifies a registration region/country available to the test build and a fresh test email. All other required registration data are available.\nProcedure:\n1. Open the hosted registration flow and locate the region/country selection used to establish the account region.\n2. Before submitting, inspect the user-facing information associated with region selection and record whether it states that the selection determines where health data are stored and cannot be changed later.\n3. Select the Test Data region/country and complete registration, email activation and sign in through the normal user flow.\n4. Open Settings > User Profile and inspect the Country/region field and any available edit control.\nExpected result:\n1. Registration provides the controlled account-region selection and informs the user before completion that the selection determines health-data storage location and cannot be changed later.\n2. The selected region/country is retained for the created account.\n3. After registration, the user cannot change the account region through an in-app operation.\n4. If the required region selection or required notice is absent from the tested registration UI, record the case as FAIL rather than substituting Profile Setup behavior.\nRequired evidence: Registration region selector and data-location/immutability notice; selected value; post-login User Profile region/country state; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-019",
+    "title": "53. VP-APP-HOSTED-REG-019 \u2014 Set and lock glucose unit from registration region",
+    "references": [],
+    "precondition": "Preconditions: Protocol Test Data identifies at least one supported registration region and its required glucose unit. If the approved region matrix contains a region that permits multiple units, Test Data also identifies that region and the permitted choices. Fresh registration data are available for each required scenario.",
+    "mentions": [
+      "Preconditions: Protocol Test Data identifies at least one supported registration region and its required glucose unit. If the approved region matrix contains a region that permits multiple units, Test Data also identifies that region and the permitted choices. Fresh registration data are available for each required scenario.",
+      "1. In a fresh registration, select the Test Data region that maps to a single glucose unit and observe the glucose-unit behavior before submitting.",
+      "3. If Test Data identifies a supported multi-unit region, repeat with a second fresh account: select that region, choose the permitted unit during registration, complete the explicit confirmation required by the flow, then sign in and record the applied unit."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-282 / DO-670\nPreconditions: Protocol Test Data identifies at least one supported registration region and its required glucose unit. If the approved region matrix contains a region that permits multiple units, Test Data also identifies that region and the permitted choices. Fresh registration data are available for each required scenario.\nProcedure:\n1. In a fresh registration, select the Test Data region that maps to a single glucose unit and observe the glucose-unit behavior before submitting.\n2. Complete registration/activation/sign-in and reach Tell us about you / Profile Setup; record Country and the displayed Glucose unit.\n3. If Test Data identifies a supported multi-unit region, repeat with a second fresh account: select that region, choose the permitted unit during registration, complete the explicit confirmation required by the flow, then sign in and record the applied unit.\n4. On the post-login Profile Setup screen, confirm the account unit cannot be changed independently to create a Country/Glucose Unit mismatch.\nExpected result:\n1. For a single-unit region, the correct glucose unit is applied without an independent user choice at registration.\n2. For a supported multi-unit region, the user can select only a permitted unit and must complete the controlled confirmation before proceeding.\n3. After login, the account-level unit matches the registered region/selection and is applied to the Profile Setup glucose-unit state.\n4. The user cannot independently change the unit post-registration to create an inconsistent Country/Glucose Unit combination.\nRequired evidence: Registration unit/region evidence; explicit confirmation where applicable; post-login Profile Setup Country + Glucose unit screenshot; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOSTED-REG-020",
+    "title": "54. VP-APP-HOSTED-REG-020 \u2014 Unsupported registration language warning and recovery",
+    "references": [],
+    "precondition": "Preconditions: Protocol Test Data identifies a registration region, a phone/display language that is not supported for authenticated content in that region, and the region\u2019s approved fallback language. The phone language can be changed using normal OS controls.",
+    "mentions": [
+      "Preconditions: Protocol Test Data identifies a registration region, a phone/display language that is not supported for authenticated content in that region, and the region\u2019s approved fallback language. The phone language can be changed using normal OS controls.",
+      "1. Set the phone/display language to the unsupported-for-region language recorded in Test Data.",
+      "2. Open hosted registration and select the target Test Data region."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-283 / DO-671\nPreconditions: Protocol Test Data identifies a registration region, a phone/display language that is not supported for authenticated content in that region, and the region\u2019s approved fallback language. The phone language can be changed using normal OS controls.\nProcedure:\n1. Set the phone/display language to the unsupported-for-region language recorded in Test Data.\n2. Open hosted registration and select the target Test Data region.\n3. Observe the warning shown before registration proceeds.\n4. Use the warning option that allows the user to stop/correct the selection, then return and correct the region/language as needed.\n5. Repeat the mismatch and choose the warning option that allows registration to continue, where provided by the controlled flow.\nExpected result:\n1. A non-blocking warning is presented when the registration language is not supported by the selected account region.\n2. The warning tells the user that the subsequent logged-in application content will not be available in the currently displayed language and allows the user to return/correct the region or language.\n3. The phone-language mismatch alone does not make account registration impossible; the user can continue if they deliberately accept the controlled warning path.\n4. If the controlled warning is not present, record FAIL rather than using a generic browser-language message as a substitute.\nRequired evidence: Mismatch setup record; warning screenshot; correction path evidence; accepted-continue path evidence where available; execution record\nResult: Not run\nBatch 8 - Forgot Password and Login Recovery\n"
+  },
+  {
+    "id": "VP-APP-PROFILE-003",
+    "title": "69. VP-APP-PROFILE-003 \u2014 Date-of-birth entry and display",
+    "references": [],
+    "precondition": "Preconditions: Tell us about you / Profile Setup is open. Protocol Test Data provides a valid date of birth for this case.",
+    "mentions": [
+      "Preconditions: Tell us about you / Profile Setup is open. Protocol Test Data provides a valid date of birth for this case.",
+      "2. Select the valid Test Data date.",
+      "2. The valid Test Data date can be selected and confirmed."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Tell us about you / Profile Setup is open. Protocol Test Data provides a valid date of birth for this case.\nProcedure:\n1. Tap Date of birth.\n2. Select the valid Test Data date.\n3. Confirm/apply the selection.\n4. Observe the Date of birth value shown on Profile Setup.\nExpected result:\n1. The date selector opens from Date of birth.\n2. The valid Test Data date can be selected and confirmed.\n3. After confirmation, the same selected date is shown in the Date of birth field on Profile Setup.\nRequired evidence: Date selector screenshot; selected-date screenshot on Profile Setup; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-PROFILE-005",
+    "title": "70. VP-APP-PROFILE-005 \u2014 Country selection and displayed value",
+    "references": [],
+    "precondition": "Preconditions: Tell us about you / Profile Setup is open. Protocol Test Data identifies a valid Country value available in the selector.",
+    "mentions": [
+      "Preconditions: Tell us about you / Profile Setup is open. Protocol Test Data identifies a valid Country value available in the selector.",
+      "2. Select the Country value recorded in Test Data.",
+      "1. The Country selector opens and includes the Test Data country."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Tell us about you / Profile Setup is open. Protocol Test Data identifies a valid Country value available in the selector.\nProcedure:\n1. Tap Country.\n2. Select the Country value recorded in Test Data.\n3. Return to Profile Setup and observe the Country field.\nExpected result:\n1. The Country selector opens and includes the Test Data country.\n2. The selected country is accepted.\n3. The same country is displayed in the Country field after returning to Profile Setup.\n4. Glucose-unit behavior is verified separately in VP-APP-PROFILE-007.\nRequired evidence: Country selector screenshot; selected Country shown on Profile Setup; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-PROFILE-007",
+    "title": "72. VP-APP-PROFILE-007 \u2014 Glucose unit follows the selected country",
+    "references": [],
+    "precondition": "Preconditions: Tell us about you / Profile Setup is open. The protocol Test Data table identifies the current Country/unit mapping and a second selectable Country that uses the other supported glucose unit.",
+    "mentions": [
+      "Preconditions: Tell us about you / Profile Setup is open. The protocol Test Data table identifies the current Country/unit mapping and a second selectable Country that uses the other supported glucose unit.",
+      "2. Open Country and select the second Test Data country.",
+      "4. Record the Glucose unit shown under the \u201cSet automatically from your country\u201d guidance and compare it with the Test Data mapping.",
+      "1. Changing Country updates Glucose unit to the unit mapped to that country in Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Tell us about you / Profile Setup is open. The protocol Test Data table identifies the current Country/unit mapping and a second selectable Country that uses the other supported glucose unit.\nProcedure:\n1. Record the current Country and Glucose unit shown on Profile Setup.\n2. Open Country and select the second Test Data country.\n3. Return to Profile Setup.\n4. Record the Glucose unit shown under the \u201cSet automatically from your country\u201d guidance and compare it with the Test Data mapping.\n5. Attempt only normal user interaction with the Glucose unit control to confirm it cannot be changed independently of Country.\nExpected result:\n1. Changing Country updates Glucose unit to the unit mapped to that country in Test Data.\n2. The displayed unit and Country remain a valid mapped combination.\n3. The user cannot independently select a different unit to create a Country/Glucose Unit mismatch.\n4. The screen continues to present the unit as automatically derived from Country.\nRequired evidence: Before Country/unit screenshot; Country selection; after Country/unit screenshot showing automatic-unit guidance; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-PROFILE-008",
+    "title": "73. VP-APP-PROFILE-008 \u2014 Controlled initial values and no stale account data",
+    "references": [],
+    "precondition": "Preconditions: Enter Tell us about you / Profile Setup from a fresh onboarding state. Before execution, the protocol Test Data table identifies any controlled initial Country/region and Glucose unit expected for this account/build. If DI/DO does not specify an initial Date of birth or Diabetes type value, those fields are observation-only and are not pass/fail criteria.",
+    "mentions": [
+      "Preconditions: Enter Tell us about you / Profile Setup from a fresh onboarding state. Before execution, the protocol Test Data table identifies any controlled initial Country/region and Glucose unit expected for this account/build. If DI/DO does not specify an initial Date of birth or Diabetes type value, those fields are observation-only and are not pass/fail criteria.",
+      "2. Compare only the controlled initial Country/region and Glucose unit with the values recorded in the protocol Test Data table.",
+      "1. Every initial value explicitly controlled by Test Data matches its approved value.",
+      "Required evidence: Initial Profile Setup screenshot before edits; completed Test Data comparison; execution record"
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Enter Tell us about you / Profile Setup from a fresh onboarding state. Before execution, the protocol Test Data table identifies any controlled initial Country/region and Glucose unit expected for this account/build. If DI/DO does not specify an initial Date of birth or Diabetes type value, those fields are observation-only and are not pass/fail criteria.\nProcedure:\n1. Before changing any field, record the displayed Date of birth, Country, Diabetes type and Glucose unit.\n2. Compare only the controlled initial Country/region and Glucose unit with the values recorded in the protocol Test Data table.\n3. Confirm that no personal value from a previously used test account is pre-populated as the current user\u2019s Date of birth, Phone number or Diabetes type.\nExpected result:\n1. Every initial value explicitly controlled by Test Data matches its approved value.\n2. The initial Glucose unit is consistent with the controlled Country/region mapping.\n3. No personal profile value belonging to another test account is reused as the current account\u2019s value.\n4. Fields without an approved initial-value requirement are recorded as observations only and are not failed for differing defaults.\nRequired evidence: Initial Profile Setup screenshot before edits; completed Test Data comparison; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-PROFILE-010",
+    "title": "75. VP-APP-PROFILE-010 \u2014 Phone-number validation using controlled values",
+    "references": [],
+    "precondition": "Preconditions: Tell us about you / Profile Setup is open and every other required field is valid. The protocol Test Data table provides one phone value that violates the approved phone rule, one valid phone value, and identifies the rule being verified.",
+    "mentions": [
+      "Preconditions: Tell us about you / Profile Setup is open and every other required field is valid. The protocol Test Data table provides one phone value that violates the approved phone rule, one valid phone value, and identifies the rule being verified.",
+      "1. Tap Phone number and enter the invalid Test Data value.",
+      "3. Replace the value with the valid Test Data phone number.",
+      "1. The invalid Test Data phone value is rejected through the controlled validation behavior and cannot make Continue available.",
+      "2. After the valid Test Data phone number is entered, the phone validation is cleared.",
+      "4. No numeric length boundary is inferred beyond the approved rule recorded in Test Data.",
+      "Required evidence: Invalid-phone validation screenshot; valid-phone recovered state with Continue; completed Test Data reference; execution record"
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Tell us about you / Profile Setup is open and every other required field is valid. The protocol Test Data table provides one phone value that violates the approved phone rule, one valid phone value, and identifies the rule being verified.\nProcedure:\n1. Tap Phone number and enter the invalid Test Data value.\n2. Leave/focus out of the field or use the normal form action that causes validation, then observe Phone number and Continue.\n3. Replace the value with the valid Test Data phone number.\n4. Repeat the same validation action and observe Phone number and Continue.\nExpected result:\n1. The invalid Test Data phone value is rejected through the controlled validation behavior and cannot make Continue available.\n2. After the valid Test Data phone number is entered, the phone validation is cleared.\n3. If all other required fields are valid, Continue is available after the valid phone value.\n4. No numeric length boundary is inferred beyond the approved rule recorded in Test Data.\nRequired evidence: Invalid-phone validation screenshot; valid-phone recovered state with Continue; completed Test Data reference; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-PROFILE-013",
+    "title": "76. VP-APP-PROFILE-013 \u2014 Submission and persistence",
+    "references": [],
+    "precondition": "Preconditions: All required Profile Setup fields contain valid test data.",
+    "mentions": [
+      "Preconditions: All required Profile Setup fields contain valid test data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: All required Profile Setup fields contain valid test data.\nProcedure:\n1. Tap Continue to submit Profile Setup.\n2. Confirm navigation to the next onboarding step.\n3. Return to Profile Setup and inspect the saved values.\nExpected result:\nProfile data is submitted once, the app advances to the correct next onboarding step, and saved values are retained when the profile step is revisited.\nRequired evidence: Screenshot(s)/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HEALTH-012",
+    "title": "89. VP-APP-HEALTH-012 \u2014 Display permitted Steps and Active Energy from the platform health service",
+    "references": [],
+    "precondition": "Preconditions: Approved real device contains controlled platform-health test data for the current day/date range. Health permission is granted for both Steps and Active Energy/activity energy.",
+    "mentions": [
+      "Preconditions: Approved real device contains controlled platform-health test data for the current day/date range. Health permission is granted for both Steps and Active Energy/activity energy."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-776 / DO-795\nPreconditions: Approved real device contains controlled platform-health test data for the current day/date range. Health permission is granted for both Steps and Active Energy/activity energy.\nProcedure:\n1. Grant CGMx 1 access to both Steps and Active Energy/activity energy.\n2. Ensure the platform health service contains controlled activity data for the selected dashboard date range.\n3. Open the CGMx 1 activity/dashboard view that presents platform-health activity.\n4. Record the displayed Steps and Active Energy values/graphs.\n5. Change the dashboard date/time range to another range containing known platform-health activity data and observe the update.\nExpected result:\n1. When authorized data exists, CGMx 1 displays the permitted Steps and Active Energy/activity-energy information for the selected period.\n2. Changing the dashboard range refreshes the platform-health activity for the new period.\n3. If the health service has no data for the selected period, the app does not fabricate activity values or treat the absence as a CGM error.\nRequired evidence: Screenshot of platform health source data and corresponding CGMx 1 activity display for each tested range; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-NOTIFY-013",
+    "title": "112. VP-APP-NOTIFY-013 \u2014 Phone battery-low notification",
+    "references": [],
+    "precondition": "Preconditions: Approved real device is in an active CGM session, notifications are enabled, and the phone battery is brought to or below the approved low-battery threshold using the controlled test method recorded in Test Data.",
+    "mentions": [
+      "Preconditions: Approved real device is in an active CGM session, notifications are enabled, and the phone battery is brought to or below the approved low-battery threshold using the controlled test method recorded in Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-373 / DO-717\nPreconditions: Approved real device is in an active CGM session, notifications are enabled, and the phone battery is brought to or below the approved low-battery threshold using the controlled test method recorded in Test Data.\nProcedure:\n1. Record the phone battery percentage and the approved threshold/test condition used for this run.\n2. Keep the CGM session active and background CGMx 1 if required by the platform.\n3. Allow the battery condition to meet the controlled low-battery criterion.\n4. Observe the system notification surface.\nExpected result:\nCGMx 1 provides the phone-battery-low notification required by DO-717 so the user is warned that phone charge may be insufficient for continued monitoring. The notification clearly concerns the phone battery, not the sensor/transmitter battery.\nRequired evidence: Battery percentage/state screenshot and phone-battery-low notification screenshot; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-NOTIFY-016",
+    "title": "115. VP-APP-NOTIFY-016 \u2014 Notification deep link opens the appropriate feature",
+    "references": [],
+    "precondition": "Preconditions: A supported CGMx 1 low/medium-priority system notification with a defined destination has been received and is visible in the system notification surface.",
+    "mentions": [
+      "4. Repeat with another supported notification type where test data is available."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-756 / DO-870\nPreconditions: A supported CGMx 1 low/medium-priority system notification with a defined destination has been received and is visible in the system notification surface.\nProcedure:\n1. Record the notification type and the feature/screen it is expected to open according to the controlled notification mapping.\n2. With CGMx 1 backgrounded or closed as permitted, tap the notification once.\n3. Observe the first app screen/feature shown after the app opens.\n4. Repeat with another supported notification type where test data is available.\nExpected result:\nTapping a supported notification opens CGMx 1 and navigates to the feature mapped to that notification type. The tap does not open an unrelated screen, duplicate navigation stack, or blank state.\nRequired evidence: System notification screenshot and first destination screen after tap; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-CRITICAL-017",
+    "title": "136. VP-APP-CRITICAL-017 \u2014 Multiple simultaneous alarms preserve priority and do not suppress each other",
+    "references": [],
+    "precondition": "Preconditions: Controlled test data can make two applicable alarms/notifications active at the same time or overlap in time.",
+    "mentions": [
+      "Preconditions: Controlled test data can make two applicable alarms/notifications active at the same time or overlap in time."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-870 / DO-927\nPreconditions: Controlled test data can make two applicable alarms/notifications active at the same time or overlap in time.\nProcedure:\n1. Record the two alarm/notification conditions to be overlapped and their priority levels.\n2. Establish the first condition and confirm its presentation.\n3. While it remains active, establish the second condition.\n4. Observe both alarm/notification states and their priority handling.\n5. Acknowledge/clear the higher-priority condition as permitted and confirm the remaining valid condition is still represented.\nExpected result:\nConcurrent alarms/notifications do not incorrectly suppress or overwrite one another. Priority is preserved, and clearing one condition does not silently clear another condition that remains valid.\nRequired evidence: Evidence of first condition, overlapping second condition, priority presentation and post-acknowledgement state; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-CRITICAL-018",
+    "title": "137. VP-APP-CRITICAL-018 \u2014 Alarm behavior remains correct with permitted future timestamp drift",
+    "references": [],
+    "precondition": "Preconditions: Approved transmitter/test data can deliver live measurements whose timestamps are drifted slightly into the permitted future range while measurements continue arriving in real time.",
+    "mentions": [
+      "Preconditions: Approved transmitter/test data can deliver live measurements whose timestamps are drifted slightly into the permitted future range while measurements continue arriving in real time."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-876 / DO-929\nPreconditions: Approved transmitter/test data can deliver live measurements whose timestamps are drifted slightly into the permitted future range while measurements continue arriving in real time.\nProcedure:\n1. Establish normal live readings. 2. Apply/use the approved drifted-timestamp test condition. 3. Reach a threshold/trend condition that should generate an alarm/notification. 4. Observe whether the alert occurs and which reading drives it.\nExpected result:\nNotifications and alarms continue to use the latest arriving real-time measurement and are not suppressed or driven by an older packet solely because the latest transmitter timestamp is slightly in the future.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-LOW-001",
+    "title": "149. VP-APP-LOW-001 \u2014 Low-alert screen presentation",
+    "references": [],
+    "precondition": "Preconditions: Approved real device is in onboarding at Low Glucose Alert. Account glucose unit is recorded in Test Data.",
+    "mentions": [
+      "Preconditions: Approved real device is in onboarding at Low Glucose Alert. Account glucose unit is recorded in Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-758 / DO-768\nPreconditions: Approved real device is in onboarding at Low Glucose Alert. Account glucose unit is recorded in Test Data.\nProcedure:\n1. Open the Low Glucose Alert threshold screen.\n2. Verify the screen identifies the Low threshold and displays the account glucose unit.\n3. Record the permitted range shown to the user.\n4. Enter one valid Low threshold and continue/save.\n5. Reopen the saved threshold in Reminder Settings.\nExpected result:\nThe Low threshold can be configured in the account glucose unit within the controlled range and the saved value is retained for later settings use.\nRequired evidence: Low threshold screen showing unit/range, entered value, and saved Reminder Settings value; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-LOW-005",
+    "title": "153. VP-APP-LOW-005 \u2014 70 mg/dL and 3.9 mmol/L equivalence",
+    "references": [],
+    "precondition": "Preconditions: Approved real iOS/Android device; record app build, OS, device and test-kit/transmitter identifiers. Reach Low Glucose Alert in a controlled test state.",
+    "mentions": [
+      "1. Execute the same Low Glucose Alert scenario on one approved iOS device and one approved Android device using equivalent test data. 2. Compare the user-visible controls, labels, state, navigation and outcome. 3. Record any intentional platform-specific OS differences."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Approved real iOS/Android device; record app build, OS, device and test-kit/transmitter identifiers. Reach Low Glucose Alert in a controlled test state.\nProcedure:\n1. Execute the same Low Glucose Alert scenario on one approved iOS device and one approved Android device using equivalent test data. 2. Compare the user-visible controls, labels, state, navigation and outcome. 3. Record any intentional platform-specific OS differences.\nExpected result:\nBoth platforms provide the same safety-relevant information and functional outcome. Platform-native controls may differ, but no required control, value, warning or navigation outcome is missing or contradictory.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-LOW-006",
+    "title": "154. VP-APP-LOW-006 \u2014 Low threshold minimum boundary",
+    "references": [],
+    "precondition": "Preconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.",
+    "mentions": [
+      "Preconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.",
+      "2. Enter 3.9 mmol/L (or the approved mg/dL equivalent from Test Data)."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-758 / DO-768\nPreconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.\nProcedure:\n1. Open Low Glucose Alert.\n2. Enter 3.9 mmol/L (or the approved mg/dL equivalent from Test Data).\n3. Continue/save.\n4. Reopen the saved setting.\nExpected result:\nThe minimum permitted Low threshold is accepted and retained. For mmol/L the controlled minimum is 3.9 mmol/L.\nRequired evidence: Boundary-entry and saved-value screenshots; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-LOW-007",
+    "title": "155. VP-APP-LOW-007 \u2014 Low threshold maximum boundary",
+    "references": [],
+    "precondition": "Preconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.",
+    "mentions": [
+      "Preconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.",
+      "2. Enter 5.6 mmol/L (or the approved mg/dL equivalent from Test Data)."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-758 / DO-768\nPreconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.\nProcedure:\n1. Open Low Glucose Alert.\n2. Enter 5.6 mmol/L (or the approved mg/dL equivalent from Test Data).\n3. Continue/save.\n4. Reopen the saved setting.\nExpected result:\nThe maximum permitted Low threshold is accepted and retained. For mmol/L the controlled maximum is 5.6 mmol/L.\nRequired evidence: Boundary-entry and saved-value screenshots; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-LOW-010",
+    "title": "158. VP-APP-LOW-010 \u2014 Low threshold unit handling and equivalent representation",
+    "references": [],
+    "precondition": "Preconditions: Approved mmol/L and mg/dL test configurations/accounts are available; each account unit is recorded before execution.",
+    "mentions": [
+      "3. Configure the approved equivalent Low threshold test value for each unit using Test Data.",
+      "Required evidence: Matched mmol/L and mg/dL threshold screenshots with Test Data values; execution record"
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-758 / DO-768 and unit-control requirements\nPreconditions: Approved mmol/L and mg/dL test configurations/accounts are available; each account unit is recorded before execution.\nProcedure:\n1. On the mmol/L configuration, open Low Glucose Alert and record the displayed unit/range.\n2. On the mg/dL configuration, open the same threshold screen and record its displayed unit/range.\n3. Configure the approved equivalent Low threshold test value for each unit using Test Data.\n4. Save and reopen each setting.\nExpected result:\nEach configuration accepts and displays the Low threshold only in its account glucose unit. Equivalent controlled thresholds remain clinically equivalent after the application\u2019s approved conversion/rounding; units are not mixed or silently changed.\nRequired evidence: Matched mmol/L and mg/dL threshold screenshots with Test Data values; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-LOW-016",
+    "title": "164. VP-APP-LOW-016 \u2014 Critical-low snooze cannot exceed the overall maximum",
+    "references": [],
+    "precondition": "Preconditions: Critical-low alarm can be generated using approved test data. The available snooze controls are enabled. Approved procedure permits app/phone restart during the test.",
+    "mentions": [
+      "Preconditions: Critical-low alarm can be generated using approved test data. The available snooze controls are enabled. Approved procedure permits app/phone restart during the test."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-858 / DO-946\nPreconditions: Critical-low alarm can be generated using approved test data. The available snooze controls are enabled. Approved procedure permits app/phone restart during the test.\nProcedure:\n1. Trigger the critical-low alarm and snooze it. 2. Attempt repeated snoozes through the controlled overall maximum window. 3. Toggle applicable snooze settings off/on where available. 4. Restart the app/phone during the snooze period and repeat the attempt.\nExpected result:\nCritical-low snooze cannot be extended beyond the requirement maximum by repeated snoozing, toggling settings, or app/phone restart. Snooze state is retained sufficiently to enforce the overall limit using trusted time where available.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\nBatch 17 - High Glucose Alert\n"
+  },
+  {
+    "id": "VP-APP-HIGH-001",
+    "title": "165. VP-APP-HIGH-001 \u2014 High-alert screen presentation",
+    "references": [],
+    "precondition": "Preconditions: Approved real device is in onboarding at High Glucose Alert. Account glucose unit is recorded in Test Data.",
+    "mentions": [
+      "Preconditions: Approved real device is in onboarding at High Glucose Alert. Account glucose unit is recorded in Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-758 / DO-768\nPreconditions: Approved real device is in onboarding at High Glucose Alert. Account glucose unit is recorded in Test Data.\nProcedure:\n1. Open the High Glucose Alert threshold screen.\n2. Verify the screen identifies the High threshold and displays the account glucose unit.\n3. Record the permitted range shown to the user.\n4. Enter one valid High threshold and continue/save.\n5. Reopen the saved threshold in Reminder Settings.\nExpected result:\nThe High threshold can be configured in the account glucose unit within the controlled range and the saved value is retained for later settings use.\nRequired evidence: High threshold screen showing unit/range, entered value, and saved Reminder Settings value; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HIGH-005",
+    "title": "169. VP-APP-HIGH-005 \u2014 180 mg/dL and 10.0 mmol/L equivalence",
+    "references": [],
+    "precondition": "Preconditions: Approved real iOS/Android device; record app build, OS, device and test-kit/transmitter identifiers. Reach High Glucose Alert in a controlled test state.",
+    "mentions": [
+      "1. Execute the same High Glucose Alert scenario on one approved iOS device and one approved Android device using equivalent test data. 2. Compare the user-visible controls, labels, state, navigation and outcome. 3. Record any intentional platform-specific OS differences."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Approved real iOS/Android device; record app build, OS, device and test-kit/transmitter identifiers. Reach High Glucose Alert in a controlled test state.\nProcedure:\n1. Execute the same High Glucose Alert scenario on one approved iOS device and one approved Android device using equivalent test data. 2. Compare the user-visible controls, labels, state, navigation and outcome. 3. Record any intentional platform-specific OS differences.\nExpected result:\nBoth platforms provide the same safety-relevant information and functional outcome. Platform-native controls may differ, but no required control, value, warning or navigation outcome is missing or contradictory.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HIGH-006",
+    "title": "170. VP-APP-HIGH-006 \u2014 High threshold minimum boundary",
+    "references": [],
+    "precondition": "Preconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.",
+    "mentions": [
+      "Preconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.",
+      "2. Enter 7.8 mmol/L (or the approved mg/dL equivalent from Test Data)."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-758 / DO-768\nPreconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.\nProcedure:\n1. Open High Glucose Alert.\n2. Enter 7.8 mmol/L (or the approved mg/dL equivalent from Test Data).\n3. Continue/save.\n4. Reopen the saved setting.\nExpected result:\nThe minimum permitted High threshold is accepted and retained. For mmol/L the controlled minimum is 7.8 mmol/L.\nRequired evidence: Boundary-entry and saved-value screenshots; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HIGH-007",
+    "title": "171. VP-APP-HIGH-007 \u2014 High threshold maximum boundary",
+    "references": [],
+    "precondition": "Preconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.",
+    "mentions": [
+      "Preconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.",
+      "2. Enter 13.9 mmol/L (or the approved mg/dL equivalent from Test Data)."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-758 / DO-768\nPreconditions: Use an mmol/L account/build for the direct controlled boundary, or the approved equivalent recorded in Test Data for mg/dL.\nProcedure:\n1. Open High Glucose Alert.\n2. Enter 13.9 mmol/L (or the approved mg/dL equivalent from Test Data).\n3. Continue/save.\n4. Reopen the saved setting.\nExpected result:\nThe maximum permitted High threshold is accepted and retained. For mmol/L the controlled maximum is 13.9 mmol/L.\nRequired evidence: Boundary-entry and saved-value screenshots; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HIGH-010",
+    "title": "174. VP-APP-HIGH-010 \u2014 High threshold unit handling and equivalent representation",
+    "references": [],
+    "precondition": "Preconditions: Approved mmol/L and mg/dL test configurations/accounts are available; each account unit is recorded before execution.",
+    "mentions": [
+      "3. Configure the approved equivalent High threshold test value for each unit using Test Data.",
+      "Required evidence: Matched mmol/L and mg/dL threshold screenshots with Test Data values; execution record"
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-758 / DO-768 and unit-control requirements\nPreconditions: Approved mmol/L and mg/dL test configurations/accounts are available; each account unit is recorded before execution.\nProcedure:\n1. On the mmol/L configuration, open High Glucose Alert and record the displayed unit/range.\n2. On the mg/dL configuration, open the same threshold screen and record its displayed unit/range.\n3. Configure the approved equivalent High threshold test value for each unit using Test Data.\n4. Save and reopen each setting.\nExpected result:\nEach configuration accepts and displays the High threshold only in its account glucose unit. Equivalent controlled thresholds remain clinically equivalent after the application\u2019s approved conversion/rounding; units are not mixed or silently changed.\nRequired evidence: Matched mmol/L and mg/dL threshold screenshots with Test Data values; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-SCAN-011",
+    "title": "196. VP-APP-SCAN-011 \u2014 Recalled sensor is blocked before session start",
+    "references": [],
+    "precondition": "Preconditions: Quality-controlled recalled sensor/applicator test identifier is recorded in Test Data and can be supplied through the normal scan/manual identification path. Tester does not alter recall backend records.",
+    "mentions": [
+      "Preconditions: Quality-controlled recalled sensor/applicator test identifier is recorded in Test Data and can be supplied through the normal scan/manual identification path. Tester does not alter recall backend records.",
+      "Required evidence: Test Data identifier reference, recall/safety message and blocked progression screenshot; execution record"
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-447 / DO-738 and DI-716 / DO-819\nPreconditions: Quality-controlled recalled sensor/applicator test identifier is recorded in Test Data and can be supplied through the normal scan/manual identification path. Tester does not alter recall backend records.\nProcedure:\n1. Start a new sensor setup and reach Scan your sensor.\n2. Scan or enter the approved recalled sensor identifier using the supported user path.\n3. Allow the normal recall validation to complete.\n4. Attempt to continue toward physical sensor installation/session start.\n5. Record the recall/safety guidance shown to the user.\nExpected result:\nThe recalled sensor/applicator is identified before the user is instructed to physically install/start the sensor. The app presents safety/recall guidance and blocks progression into sensor use/session start for the recalled identifier.\nRequired evidence: Test Data identifier reference, recall/safety message and blocked progression screenshot; execution record\nResult: Not run\nBatch 20 - Manual Sensor ID Entry\n"
+  },
+  {
+    "id": "VP-APP-SENSOR-ID-005",
+    "title": "201. VP-APP-SENSOR-ID-005 \u2014 Confirm manually entered Sensor ID against packaging",
+    "references": [],
+    "precondition": "Preconditions: An approved Sensor Test ID from the physical/test packaging is recorded in Test Data and manual Sensor ID entry is available.",
+    "mentions": [
+      "Preconditions: An approved Sensor Test ID from the physical/test packaging is recorded in Test Data and manual Sensor ID entry is available."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-716 / DO-819\nPreconditions: An approved Sensor Test ID from the physical/test packaging is recorded in Test Data and manual Sensor ID entry is available.\nProcedure:\n1. Enter the approved Sensor Test ID manually.\n2. Select Continue.\n3. Verify the app presents the manual-ID confirmation/review step before physical installation guidance.\n4. Compare the displayed/entered ID with the packaging.\n5. Use the provided back/correct action once, then return and confirm the correct ID.\nExpected result:\nThe manual-entry path gives the user an opportunity to verify/correct the Sensor ID against the packaging before installation. The guidance explains that accurate identification is required for safety/recall handling.\nRequired evidence: Entered ID, packaging/reference, confirmation/review and back/correct path screenshots; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-SENSOR-ID-006",
+    "title": "202. VP-APP-SENSOR-ID-006 \u2014 Manual sensor expiry check",
+    "references": [],
+    "precondition": "Preconditions: Sensor identification is being completed through manual Sensor ID entry, so GS1 expiry data is not available from a scan.",
+    "mentions": [
+      "1. Complete the manual Sensor ID confirmation using the approved Test Data ID."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-716 / DO-819 and DI-340 / DO-733\nPreconditions: Sensor identification is being completed through manual Sensor ID entry, so GS1 expiry data is not available from a scan.\nProcedure:\n1. Complete the manual Sensor ID confirmation using the approved Test Data ID.\n2. Continue through recall/trusted-time validation until the manual expiry-check prompt is reached.\n3. Compare the physical/test packaging expiry date with the prompt instructions.\n4. Follow the user confirmation path and attempt to continue.\nExpected result:\nBefore physical installation/session setup proceeds, the manual-ID path asks the user to check the sensor expiry date from its packaging. The flow does not falsely claim that expiry was obtained from a scanned GS1 code.\nRequired evidence: Manual ID confirmation, packaging expiry reference and manual expiry-check prompt; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-BLE-SCAN-004",
+    "title": "220. VP-APP-BLE-SCAN-004 \u2014 Multiple-transmitter ordering and selection availability",
+    "references": [],
+    "precondition": "Preconditions: Two approved Modus test transmitters are advertising at the same time and their displayed identifiers are recorded in the protocol Test Data table.",
+    "mentions": [
+      "Preconditions: Two approved Modus test transmitters are advertising at the same time and their displayed identifiers are recorded in the protocol Test Data table."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-139 / DO-827\nPreconditions: Two approved Modus test transmitters are advertising at the same time and their displayed identifiers are recorded in the protocol Test Data table.\nProcedure:\n1. Open the transmitter discovery screen and wait until both recorded transmitter IDs are visible. 2. On iOS, record each displayed signal-strength value and the list order. 3. Select the first transmitter and confirm the selection/confirmation state identifies that transmitter; cancel without connecting. 4. Select the second transmitter and confirm the selection/confirmation state identifies the second transmitter.\nExpected result:\nBoth approved transmitters are shown as separate selectable entries with their recorded full identifiers. On iOS, the displayed list is ordered by signal strength. Selecting either entry opens the selection/confirmation state for that same transmitter and Cancel returns safely to discovery.\nRequired evidence: Screenshot(s)/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-TX-PAIR-004",
+    "title": "228. VP-APP-TX-PAIR-004 \u2014 First-time transmitter registration using GS1 or manual PIN",
+    "references": [],
+    "precondition": "Preconditions: A transmitter that is not yet registered/locked to the current user account is available with approved packaging/GS1 data and approved PIN/test data.",
+    "mentions": [
+      "Preconditions: A transmitter that is not yet registered/locked to the current user account is available with approved packaging/GS1 data and approved PIN/test data.",
+      "1. Pair the unregistered transmitter through the normal BLE path. 2. When first-time registration is requested, exercise the approved GS1 path or manual PIN path using controlled test data. 3. Observe registration and continuation.",
+      "Required evidence: Blocked - controlled first-time/unregistered transmitter state and approved registration test data required"
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: A transmitter that is not yet registered/locked to the current user account is available with approved packaging/GS1 data and approved PIN/test data.\nProcedure:\n1. Pair the unregistered transmitter through the normal BLE path. 2. When first-time registration is requested, exercise the approved GS1 path or manual PIN path using controlled test data. 3. Observe registration and continuation.\nExpected result:\nFor first-time use on the account, DO-824 performs transmitter identification/account locking using GS1 barcode scan or manual PIN and then permits the setup flow to continue when valid controlled data are supplied.\nRequired evidence: Blocked - controlled first-time/unregistered transmitter state and approved registration test data required\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-TX-PAIR-023",
+    "title": "229. VP-APP-TX-PAIR-023 \u2014 Recalled transmitter is blocked before session start",
+    "references": [],
+    "precondition": "Preconditions: The protocol Test Data table identifies a Quality-provided transmitter/device state that is controlled as recalled. The tester does not create or change recall state.",
+    "mentions": [
+      "Preconditions: The protocol Test Data table identifies a Quality-provided transmitter/device state that is controlled as recalled. The tester does not create or change recall state.",
+      "1. Follow the normal transmitter discovery and selection flow using the recalled transmitter from Test Data. 2. Continue through connection/device-information checks until the recall check is reached. 3. Attempt to continue toward session start. 4. Record the blocking message and the user action offered by the app."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-448 / DO-739\nPreconditions: The protocol Test Data table identifies a Quality-provided transmitter/device state that is controlled as recalled. The tester does not create or change recall state.\nProcedure:\n1. Follow the normal transmitter discovery and selection flow using the recalled transmitter from Test Data. 2. Continue through connection/device-information checks until the recall check is reached. 3. Attempt to continue toward session start. 4. Record the blocking message and the user action offered by the app.\nExpected result:\nThe app identifies the transmitter as recalled before session start, displays a user-facing recall/blocking message, and does not allow the recalled transmitter to start or continue a CGM session. The screen provides a safe path away from use of the recalled transmitter.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-TX-PAIR-024",
+    "title": "230. VP-APP-TX-PAIR-024 \u2014 Backend recall response is enforced during start/upload without losing expected-session safety state",
+    "references": [],
+    "precondition": "Preconditions: The protocol Test Data table identifies the approved recalled item/build and the normal user flow in which the backend returns the controlled recall response. The tester does not alter backend data.",
+    "mentions": [
+      "Preconditions: The protocol Test Data table identifies the approved recalled item/build and the normal user flow in which the backend returns the controlled recall response. The tester does not alter backend data.",
+      "1. Use the recalled Test Data item in the specified normal start/upload flow. 2. Record the recall response shown by the app. 3. Close and relaunch the app, or background and resume it as specified in Test Data. 4. Return to the affected CGM flow and attempt normal use of the same recalled item."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-865 / DO-948\nPreconditions: The protocol Test Data table identifies the approved recalled item/build and the normal user flow in which the backend returns the controlled recall response. The tester does not alter backend data.\nProcedure:\n1. Use the recalled Test Data item in the specified normal start/upload flow. 2. Record the recall response shown by the app. 3. Close and relaunch the app, or background and resume it as specified in Test Data. 4. Return to the affected CGM flow and attempt normal use of the same recalled item.\nExpected result:\nThe recall state remains enforced after the app interruption. The user is not allowed to continue normal CGM use with the recalled item, and the app continues to present the applicable recall/safe-action state rather than silently accepting the item.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-TX-PAIR-026",
+    "title": "232. VP-APP-TX-PAIR-026 \u2014 Trusted-time validation remains available offline for session start/resume",
+    "references": [],
+    "precondition": "Preconditions: The approved test device has obtained trusted/server time through normal online use. The protocol Test Data table records the account, sensor/transmitter and time at which the trusted-time state was established. Internet can then be disabled without changing device time.",
+    "mentions": [
+      "Preconditions: The approved test device has obtained trusted/server time through normal online use. The protocol Test Data table records the account, sensor/transmitter and time at which the trusted-time state was established. Internet can then be disabled without changing device time."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-837 / DO-903\nPreconditions: The approved test device has obtained trusted/server time through normal online use. The protocol Test Data table records the account, sensor/transmitter and time at which the trusted-time state was established. Internet can then be disabled without changing device time.\nProcedure:\n1. While online, complete the normal action that establishes/refreshes trusted time and record the device date/time. 2. Disable mobile data and Wi-Fi. 3. Without changing the device clock, start or resume the applicable CGM session using the approved sensor/transmitter. 4. Observe whether time validation allows the offline flow or presents the approved manual time/timezone confirmation when trusted time is unavailable. 5. Restore internet after the observation.\nExpected result:\nOffline operation does not bypass time validation. When retained trusted time is available, the app can use it to validate the offline start/resume flow. If retained trusted time is unavailable, the app requires the user to confirm the current phone time/timezone before proceeding rather than silently treating unvalidated time as trusted.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOME-001",
+    "title": "246. VP-APP-HOME-001 \u2014 Live Home presentation and automatic glucose update",
+    "references": [
+      "TD-01",
+      "TD-03",
+      "TD-05",
+      "TD-07",
+      "TD-08"
+    ],
+    "precondition": "Preconditions: Log in with TD-01 on an approved device (TD-07 or TD-08) using TD-03 and TD-05. The sensor session is active, Bluetooth is ON, and a fresh glucose reading is arriving normally.",
+    "mentions": [
+      "Preconditions: Log in with TD-01 on an approved device (TD-07 or TD-08) using TD-03 and TD-05. The sensor session is active, Bluetooth is ON, and a fresh glucose reading is arriving normally."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-837; DO-906; DO-907; DO-908; DI-289 / DO-857; DI-290 / DO-858\nPreconditions: Log in with TD-01 on an approved device (TD-07 or TD-08) using TD-03 and TD-05. The sensor session is active, Bluetooth is ON, and a fresh glucose reading is arriving normally.\nProcedure:\n1. Open Home and record the SENSOR/session status, LIVE/freshness state, glucose value, unit, trend text/icon and update time.\n2. Keep Home open without refreshing or navigating away.\n3. Observe three consecutive normal CGM measurement arrivals and record the glucose value/update time after each arrival.\n4. Confirm the newest Home value corresponds to the latest received sensor reading.\nExpected result:\n1. Home clearly shows the active live session, current glucose in the configured unit, trend information when valid, and recency information.\n2. Each newly received valid glucose measurement updates Home automatically without a manual refresh.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOME-002",
+    "title": "247. VP-APP-HOME-002 \u2014 Bluetooth loss, STALE state, automatic reconnection and LIVE recovery",
+    "references": [
+      "TD-01",
+      "TD-03",
+      "TD-05"
+    ],
+    "precondition": "Preconditions: Start on Home in a normal LIVE session using TD-01, TD-03 and TD-05. Bluetooth is ON and the current reading is fresh.",
+    "mentions": [
+      "Preconditions: Start on Home in a normal LIVE session using TD-01, TD-03 and TD-05. Bluetooth is ON and the current reading is fresh."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-703; DO-833; DI-289 / DO-857\nPreconditions: Start on Home in a normal LIVE session using TD-01, TD-03 and TD-05. Bluetooth is ON and the current reading is fresh.\nProcedure:\n1. Record the current LIVE status and latest reading time.\n2. Turn Bluetooth OFF using the normal phone Bluetooth control.\n3. Remain on Home until the app shows its connection-loss/stale state; record the exact user-facing status and recovery instruction.\n4. Turn Bluetooth ON using the normal phone Bluetooth control.\n5. Keep Home open and observe the connection status during automatic recovery.\n6. Wait for the next new sensor reading and record the final status, glucose value and update time.\nExpected result:\n1. While Bluetooth is OFF, the retained reading is not presented as fresh/LIVE and the user receives understandable recovery guidance.\n2. After Bluetooth is restored, the app attempts normal automatic reconnection and returns to LIVE only after fresh sensor data is received.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOME-003",
+    "title": "248. VP-APP-HOME-003 \u2014 All real-time trend states and invalid-trend suppression",
+    "references": [
+      "TD-22"
+    ],
+    "precondition": "Preconditions: Before execution, TD-22 is completed with approved real-device/test-kit scenario references for all seven trend states. Use the listed scenario exactly; do not inject or edit backend glucose data.",
+    "mentions": [
+      "Preconditions: Before execution, TD-22 is completed with approved real-device/test-kit scenario references for all seven trend states. Use the listed scenario exactly; do not inject or edit backend glucose data.",
+      "1. Run the TD-22 Steady scenario and record the Home trend text and arrow/icon.",
+      "2. Repeat using the TD-22 Slowly Rising, Rising and Rapidly Rising scenarios, recording the trend text and arrow/icon for each.",
+      "3. Repeat using the TD-22 Slowly Falling, Falling and Rapidly Falling scenarios, recording the trend text and arrow/icon for each."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-749 / DO-838; DI-742 / DO-854; DO-908\nPreconditions: Before execution, TD-22 is completed with approved real-device/test-kit scenario references for all seven trend states. Use the listed scenario exactly; do not inject or edit backend glucose data.\nProcedure:\n1. Run the TD-22 Steady scenario and record the Home trend text and arrow/icon.\n2. Repeat using the TD-22 Slowly Rising, Rising and Rapidly Rising scenarios, recording the trend text and arrow/icon for each.\n3. Repeat using the TD-22 Slowly Falling, Falling and Rapidly Falling scenarios, recording the trend text and arrow/icon for each.\n4. From a valid displayed trend, interrupt incoming measurements using the approved real-device method until the required recent trend window becomes incomplete/outdated.\n5. Observe the trend area, then restore normal measurements and wait until a valid trend can be calculated again.\nExpected result:\n1. For each supplied valid scenario, Home displays the matching discrete trend text and directional icon.\n2. When the required recent measurement window is incomplete/outdated, Home does not show a misleading directional trend; a valid trend can return after sufficient fresh data resumes.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOME-004",
+    "title": "249. VP-APP-HOME-004 \u2014 Remaining sensor life for confirmed and unconfirmed session state",
+    "references": [
+      "TD-03",
+      "TD-05"
+    ],
+    "precondition": "Preconditions: TD-05 identifies the active sensor start/session timing. Begin with TD-03 connected and the active session confirmed.",
+    "mentions": [
+      "Preconditions: TD-05 identifies the active sensor start/session timing. Begin with TD-03 connected and the active session confirmed.",
+      "2. Compare the displayed remaining life with the known TD-05 session timing."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-323 / DO-825\nPreconditions: TD-05 identifies the active sensor start/session timing. Begin with TD-03 connected and the active session confirmed.\nProcedure:\n1. Open Home and record the remaining sensor-life value.\n2. Compare the displayed remaining life with the known TD-05 session timing.\n3. Create a normal disconnected/unconfirmed state by turning Bluetooth OFF and waiting for the app to recognize the loss of communication.\n4. Observe the remaining-life presentation while current session timing/usage cannot be confirmed.\n5. Restore Bluetooth and wait for normal session recovery; observe remaining life again.\nExpected result:\n1. When connection/session timing is confirmed, Home shows remaining life for the active sensor session.\n2. When the app cannot confirm current session timing/usage, it does not continue presenting a misleading confirmed remaining-life value; normal presentation can return after recovery.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOME-005",
+    "title": "250. VP-APP-HOME-005 \u2014 Home glucose state presentation: In Range, Low, High and Critical/Severe Low",
+    "references": [
+      "TD-23"
+    ],
+    "precondition": "Preconditions: Before execution, TD-23 is completed with approved real-device/test-kit scenarios and expected readings for In Range, Low, High and Critical/Severe Low. Alarm behavior itself remains covered in the alarm batches.",
+    "mentions": [
+      "Preconditions: Before execution, TD-23 is completed with approved real-device/test-kit scenarios and expected readings for In Range, Low, High and Critical/Severe Low. Alarm behavior itself remains covered in the alarm batches.",
+      "1. Run the TD-23 In Range scenario and record the glucose value, unit and state presentation on Home.",
+      "2. Repeat for the TD-23 Low scenario.",
+      "3. Repeat for the TD-23 High scenario.",
+      "4. Repeat for the TD-23 Critical/Severe Low scenario, observing Home presentation only and following the separate alarm procedure where an alarm is raised."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-837 and applicable glucose-state/alarm presentation requirements\nPreconditions: Before execution, TD-23 is completed with approved real-device/test-kit scenarios and expected readings for In Range, Low, High and Critical/Severe Low. Alarm behavior itself remains covered in the alarm batches.\nProcedure:\n1. Run the TD-23 In Range scenario and record the glucose value, unit and state presentation on Home.\n2. Repeat for the TD-23 Low scenario.\n3. Repeat for the TD-23 High scenario.\n4. Repeat for the TD-23 Critical/Severe Low scenario, observing Home presentation only and following the separate alarm procedure where an alarm is raised.\nExpected result:\n1. Each approved glucose scenario is displayed with the correct glucose value/unit and an understandable state indication.\n2. This case does not replace the dedicated Low/High/Critical alarm behavior tests.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOME-006",
+    "title": "251. VP-APP-HOME-006 \u2014 Home glucose graph, selected range, thresholds and genuine data gaps",
+    "references": [
+      "TD-11",
+      "TD-12",
+      "TD-14",
+      "TD-20"
+    ],
+    "precondition": "Preconditions: TD-14 contains glucose history across at least two approved Home ranges, TD-11/TD-12 contain the configured thresholds, and TD-20 identifies a genuine historical gap.",
+    "mentions": [
+      "Preconditions: TD-14 contains glucose history across at least two approved Home ranges, TD-11/TD-12 contain the configured thresholds, and TD-20 identifies a genuine historical gap.",
+      "3. Verify the plotted history/time span changes to the newly selected range and the threshold markers still match TD-11/TD-12.",
+      "4. Select the range containing the TD-20 known gap and locate the gap on the graph."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-192 / DO-775; DO-756; DI-292 / DO-760 where threshold markers are displayed\nPreconditions: TD-14 contains glucose history across at least two approved Home ranges, TD-11/TD-12 contain the configured thresholds, and TD-20 identifies a genuine historical gap.\nProcedure:\n1. Open Home and record the selected range, chart time span and visible Low/High threshold markers.\n2. Select another approved Home range and confirm the selected control changes.\n3. Verify the plotted history/time span changes to the newly selected range and the threshold markers still match TD-11/TD-12.\n4. Select the range containing the TD-20 known gap and locate the gap on the graph.\nExpected result:\n1. The chart represents the selected data window and current configured threshold references.\n2. A genuine missing-data interval remains identifiable as a gap and is not fabricated as a continuous glucose trace.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOME-007",
+    "title": "252. VP-APP-HOME-007 \u2014 Home glucose graph point inspection, pan, pinch zoom and reset",
+    "references": [
+      "TD-19"
+    ],
+    "precondition": "Preconditions: TD-19 identifies a known plotted glucose point. Home graph contains enough historical data to pan and, on the released build, supports pinch zoom.",
+    "mentions": [
+      "Preconditions: TD-19 identifies a known plotted glucose point. Home graph contains enough historical data to pan and, on the released build, supports pinch zoom.",
+      "1. Select a Home range that contains TD-19.",
+      "2. Tap the plotted point for TD-19 and record the displayed glucose value and timestamp."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-190 / DO-773; DI-114 / DO-754; DI-50 / DO-695\nPreconditions: TD-19 identifies a known plotted glucose point. Home graph contains enough historical data to pan and, on the released build, supports pinch zoom.\nProcedure:\n1. Select a Home range that contains TD-19.\n2. Tap the plotted point for TD-19 and record the displayed glucose value and timestamp.\n3. Drag horizontally across the graph and verify the time axis moves with the viewed data.\n4. Use a two-finger pinch gesture to zoom the graph in, then zoom back out.\n5. At the most zoomed/panned state used by the app, inspect the x/y-axis labels for clipping or ambiguity.\n6. Return the graph to its normal readable viewport without leaving Home and confirm the selected Home range has not changed unintentionally.\nExpected result:\n1. The selected graph point reports the corresponding value and timestamp.\n2. Pan/zoom interaction remains bounded and readable, and the graph can be returned to a normal viewport without corrupting the selected Home range.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOME-008",
+    "title": "253. VP-APP-HOME-008 \u2014 Home summary tiles recalculate and open the matching metric details",
+    "references": [
+      "TD-14"
+    ],
+    "precondition": "Preconditions: TD-14 contains enough glucose history for two approved Home ranges.",
+    "mentions": [
+      "Preconditions: TD-14 contains enough glucose history for two approved Home ranges."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-756 plus applicable TIR/Average requirements; GMI and Severe Events requirement gaps remain tracked separately\nPreconditions: TD-14 contains enough glucose history for two approved Home ranges.\nProcedure:\n1. On Home, record the selected range and the Time in Range, Daily Average, GMI and Severe Events values.\n2. Select a different approved Home range and record all four values again.\n3. Tap Time in Range and verify the Time in Range detail screen opens; return to Home.\n4. Tap Daily Average and verify Average Glucose opens; return to Home.\n5. Tap GMI and verify GMI (est. A1C) opens; return to Home.\n6. Tap Severe Events and verify Severe Events opens; return to Home.\nExpected result:\n1. All four Home summary tiles reflect the active Home range rather than stale values from the previous range.\n2. Each tile opens the metric detail screen identified by its label; destination-screen calculations are verified in their dedicated batches.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-HOME-010",
+    "title": "255. VP-APP-HOME-010 \u2014 Home contextual cards show applicable data and open their destinations",
+    "references": [
+      "TD-15",
+      "TD-16",
+      "TD-21"
+    ],
+    "precondition": "Preconditions: TD-15 contains known Meal/Insulin/Activity data, TD-16 defines platform-health activity data, and TD-21 identifies a sensor approaching replacement when available.",
+    "mentions": [
+      "Preconditions: TD-15 contains known Meal/Insulin/Activity data, TD-16 defines platform-health activity data, and TD-21 identifies a sensor approaching replacement when available.",
+      "4. Inspect the Active Energy card for the TD-16 period and verify the displayed data or legitimate no-data state; if the released card is actionable, open its destination and return.",
+      "5. When TD-21 is applicable, inspect Upcoming Sensor, record the replacement/end information, tap View Details and verify My CGM opens."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-200 / DO-783; DI-195 / DO-778; DI-204 / DO-787; DI-776 / DO-795; DI-778 / DO-796; DI-323 / DO-825\nPreconditions: TD-15 contains known Meal/Insulin/Activity data, TD-16 defines platform-health activity data, and TD-21 identifies a sensor approaching replacement when available.\nProcedure:\n1. On Home, locate the Meals card and record its visible latest/graph information; tap it and verify Carbohydrates opens; return.\n2. Locate the Insulin card, record its visible information, tap it and verify Insulin detail opens; return.\n3. Locate the Activity card, record its visible information, tap it and verify Activities opens; return.\n4. Inspect the Active Energy card for the TD-16 period and verify the displayed data or legitimate no-data state; if the released card is actionable, open its destination and return.\n5. When TD-21 is applicable, inspect Upcoming Sensor, record the replacement/end information, tap View Details and verify My CGM opens.\nExpected result:\n1. Each populated contextual card reflects the applicable source data/window and routes to the intended destination when actionable.\n2. The Upcoming Sensor View Details action opens My CGM; detailed destination behavior remains covered in its own batch.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-REPORT-001",
+    "title": "262. VP-APP-REPORT-001 \u2014 Open Reports and switch between available report views",
+    "references": [
+      "TD-01",
+      "TD-14"
+    ],
+    "precondition": "Preconditions: User is authenticated using TD-01. TD-14 provides historical glucose data. Reports is reachable from the bottom navigation.",
+    "mentions": [
+      "Preconditions: User is authenticated using TD-01. TD-14 provides historical glucose data. Reports is reachable from the bottom navigation."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: User is authenticated using TD-01. TD-14 provides historical glucose data. Reports is reachable from the bottom navigation.\nProcedure:\n1. From the bottom navigation, tap Reports.\n2. Observe the report area and the available top-level report-view controls.\n3. Select each available top-level view one at a time.\n4. After each selection, observe the displayed report and active-view indication.\nExpected result:\nReports opens without crash/blank state. Each displayed top-level report control opens its corresponding report content and the selected view is visually identifiable. Switching views does not leave stale content from the previously selected view.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-REPORT-002",
+    "title": "263. VP-APP-REPORT-002 \u2014 Change the report time window",
+    "references": [
+      "TD-14"
+    ],
+    "precondition": "Preconditions: TD-14 contains historical glucose across at least two selectable report windows. Reports is open.",
+    "mentions": [
+      "Preconditions: TD-14 contains historical glucose across at least two selectable report windows. Reports is open."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: TD-14 contains historical glucose across at least two selectable report windows. Reports is open.\nProcedure:\n1. Record the current report view and active time window.\n2. Open the report time-range control.\n3. Select another approved available range.\n4. Observe the report/chart/metrics.\n5. Select one additional approved range and observe again.\nExpected result:\nThe selected time window is visibly active and the report recalculates/refreshes for that window without showing stale values from the previous range.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-REPORT-005",
+    "title": "266. VP-APP-REPORT-005 \u2014 View locally available Reports while offline",
+    "references": [
+      "TD-14"
+    ],
+    "precondition": "Preconditions: TD-14 historical report data has already been loaded on the device. Bluetooth state is not relevant to this case; internet can be disabled and restored normally.",
+    "mentions": [
+      "Preconditions: TD-14 historical report data has already been loaded on the device. Bluetooth state is not relevant to this case; internet can be disabled and restored normally."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: TD-14 historical report data has already been loaded on the device. Bluetooth state is not relevant to this case; internet can be disabled and restored normally.\nProcedure:\n1. While online, open Reports and record one historical period that displays data.\n2. Disable Wi-Fi and mobile data using normal phone controls.\n3. Return to/open Reports.\n4. Select the same historical period recorded in Step 1.\n5. Observe the report content and any network-status messaging.\n6. Restore connectivity after the check.\nExpected result:\nHistorical report information already available locally remains viewable offline according to the approved local-data behavior. The app does not fabricate new remote data or fail solely because the network is unavailable.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-REPORT-DAY-004",
+    "title": "280. VP-APP-REPORT-DAY-004 \u2014 Break graph lines across missing or unrelated data",
+    "references": [],
+    "precondition": "Preconditions: The protocol Test Data table identifies a naturally occurring date/time containing an applicable discontinuity, such as missing readings or a sensor-session boundary. If no such test data are available, record a test-data dependency; do not create one by backend manipulation.",
+    "mentions": [
+      "Preconditions: The protocol Test Data table identifies a naturally occurring date/time containing an applicable discontinuity, such as missing readings or a sensor-session boundary. If no such test data are available, record a test-data dependency; do not create one by backend manipulation.",
+      "1. From the protocol Test Data table, record the date/time and type of the documented discontinuity in the execution record."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-44 / DO-689\nPreconditions: The protocol Test Data table identifies a naturally occurring date/time containing an applicable discontinuity, such as missing readings or a sensor-session boundary. If no such test data are available, record a test-data dependency; do not create one by backend manipulation.\nProcedure:\n1. From the protocol Test Data table, record the date/time and type of the documented discontinuity in the execution record.\n2. Open Reports > Day for that date/period.\n3. Locate the documented time period on the Day glucose graph.\n4. Inspect the glucose line immediately before, across and after the discontinuity.\nExpected result:\n1. The graph does not draw a continuous glucose trend across the documented missing/unrelated data period.\n2. A visible line break is present where continuity of measured glucose is not known.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-REPORT-AGP-004",
+    "title": "288. VP-APP-REPORT-AGP-004 \u2014 Reflect current glucose thresholds in AGP-derived report statistics",
+    "references": [],
+    "precondition": "Preconditions: Current Low and High glucose thresholds are recorded in Test Data and the AGP period contains readings across relevant bands.",
+    "mentions": [
+      "Preconditions: Current Low and High glucose thresholds are recorded in Test Data and the AGP period contains readings across relevant bands.",
+      "AGP-derived range statistics use the current configured thresholds and active glucose unit and recalculate after a saved threshold change. If the selected data contains no reading whose classification changes, record the test-data limitation without manipulating backend data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-187 / DO-873\nPreconditions: Current Low and High glucose thresholds are recorded in Test Data and the AGP period contains readings across relevant bands.\nProcedure:\n1. Record the current Low and High thresholds from Settings and the active glucose unit.\n2. Open Reports > AGP for a period containing relevant historical readings.\n3. Record the Time in Range, Time Above and Time Below statistic tiles shown with AGP.\n4. Change one threshold through its permitted Settings control, save it, and return to the same AGP period.\n5. Compare the three statistics, then restore the original threshold.\nExpected result:\nAGP-derived range statistics use the current configured thresholds and active glucose unit and recalculate after a saved threshold change. If the selected data contains no reading whose classification changes, record the test-data limitation without manipulating backend data.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-REPORT-AGP-005",
+    "title": "289. VP-APP-REPORT-AGP-005 \u2014 Include glucose measurements whose trusted timestamps are slightly ahead of device time",
+    "references": [],
+    "precondition": "Preconditions: The protocol Test Data table must define an approved run-specific future-drift condition/reading. If no approved condition is available, record BLOCKED - test-data/setup dependency. No backend manipulation is permitted.",
+    "mentions": [
+      "Preconditions: The protocol Test Data table must define an approved run-specific future-drift condition/reading. If no approved condition is available, record BLOCKED - test-data/setup dependency. No backend manipulation is permitted.",
+      "1. From the Test Data table, record the approved future-drift setup or identified reading. 2. Follow only that approved setup on the real device/test kit. 3. Record the affected glucose value and its displayed measurement time from Home or the historical glucose detail. 4. Open Reports > AGP for a period containing that measurement. 5. Inspect the corresponding AGP time-of-day bucket."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-816 / DO-915\nPreconditions: The protocol Test Data table must define an approved run-specific future-drift condition/reading. If no approved condition is available, record BLOCKED - test-data/setup dependency. No backend manipulation is permitted.\nProcedure:\n1. From the Test Data table, record the approved future-drift setup or identified reading. 2. Follow only that approved setup on the real device/test kit. 3. Record the affected glucose value and its displayed measurement time from Home or the historical glucose detail. 4. Open Reports > AGP for a period containing that measurement. 5. Inspect the corresponding AGP time-of-day bucket.\nExpected result:\nThe qualifying measurement is not excluded merely because its trusted measurement timestamp is slightly ahead of device time; it contributes to the appropriate AGP bucket in accordance with DO-915.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-TIR-003",
+    "title": "293. VP-APP-TIR-003 \u2014 Recalculate Time in Range after changing a glucose threshold",
+    "references": [],
+    "precondition": "Preconditions: Historical glucose exists for a selectable period and one permitted Low or High threshold change can be made through Settings.",
+    "mentions": [
+      "The saved threshold becomes the applicable TIR boundary and TIR statistics are recalculated for the same data window. If the available history contains no readings whose classification changes, record the test-data dependency rather than manipulating data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-914\nPreconditions: Historical glucose exists for a selectable period and one permitted Low or High threshold change can be made through Settings.\nProcedure:\n1. Open Reports > Time in Range and record the selected period plus all displayed band percentages/durations. 2. Open Settings > Reminder Settings and record the current Low/High values. 3. Change one threshold to another permitted value and save it. 4. Record the saved value. 5. Return to Reports > Time in Range and use the same period. 6. Compare the TIR display with the pre-change record. 7. Restore the original threshold after evidence capture.\nExpected result:\nThe saved threshold becomes the applicable TIR boundary and TIR statistics are recalculated for the same data window. If the available history contains no readings whose classification changes, record the test-data dependency rather than manipulating data.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-MEAL-002",
+    "title": "308. VP-APP-MEAL-002 \u2014 Save a valid carbohydrate event and display it once in Journal",
+    "references": [],
+    "precondition": "Preconditions: Carbohydrate-entry form is open.",
+    "mentions": [
+      "2. Enter a valid Carbs (g) value from Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-198 / DO-781\nPreconditions: Carbohydrate-entry form is open.\nProcedure:\n1. Open Log Meal.\n2. Enter a valid Carbs (g) value from Test Data.\n3. Open Time taken and select one approved meal type.\n4. Keep or select a permitted Date and time.\n5. Record the carbohydrate amount, meal type and date/time, then tap Save.\n6. Open Journal and locate the new meal event.\n7. Compare the saved values and confirm only one matching event is present.\nExpected result:\nThe carbohydrate event is saved once and Journal shows the corresponding grams, meal type and date/time.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-MEAL-006",
+    "title": "312. VP-APP-MEAL-006 \u2014 Display saved carbohydrate events in the Carbohydrates chart",
+    "references": [],
+    "precondition": "Preconditions: At least one manually entered meal exists in the selected period; use Test Data with known meal type and grams.",
+    "mentions": [
+      "Preconditions: At least one manually entered meal exists in the selected period; use Test Data with known meal type and grams."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-200 / DO-783; DI-199 / DO-782\nPreconditions: At least one manually entered meal exists in the selected period; use Test Data with known meal type and grams.\nProcedure:\n1. Save or identify a manual meal event and record its meal type, carbohydrate grams and date/time.\n2. On Home, locate the Meals chart and confirm the latest grams/time correspond to the event.\n3. Open the Carbohydrates detail.\n4. Select a period containing the event.\n5. Inspect the time-based bar chart, By Meal Type section, Total/Average/Peak/Tracked tiles and Recent Entries.\nExpected result:\nThe saved event is represented in the Carbohydrates chart in grams at the corresponding date/time and contributes to its meal-type series. The gram unit is used in the chart/statistics. Different meal types must be visually distinguishable as required by DO-783; if the implementation uses colour only without the required distinct patterns/legend, record the mismatch.\nRequired evidence: Screenshot of Carbohydrates detail showing the saved event, chart, meal-type grouping and supporting statistics.\nResult: Not run\nBatch 38 - Insulin Event Entry\n"
+  },
+  {
+    "id": "VP-APP-INSULIN-006",
+    "title": "318. VP-APP-INSULIN-006 \u2014 Display saved insulin events in the Insulin chart",
+    "references": [],
+    "precondition": "Preconditions: At least one manual insulin event exists in the selected period; use Test Data with known type, units and date/time.",
+    "mentions": [
+      "Preconditions: At least one manual insulin event exists in the selected period; use Test Data with known type, units and date/time."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-195 / DO-778; DI-193 / DO-776\nPreconditions: At least one manual insulin event exists in the selected period; use Test Data with known type, units and date/time.\nProcedure:\n1. Save or identify a manual insulin event and record its insulin type, units and date/time.\n2. On Home, locate the Insulin chart and confirm the latest units/time correspond to the event.\n3. Open the Insulin detail.\n4. Select a period containing the event.\n5. Inspect the time-based bar chart, By Insulin Type section, Total/Average/Peak/Tracked tiles and Recent Entries.\nExpected result:\nThe saved insulin event is represented in the Insulin chart at the corresponding date/time and contributes to its insulin-type series in units (U). Different insulin types must be visually distinguishable as required by DO-778; if the implementation uses colour only without the required distinct patterns/legend, record the mismatch.\nRequired evidence: Screenshot of Insulin detail showing the saved event, bar chart, insulin-type grouping and supporting statistics.\nResult: Not run\nBatch 39 - Physical Activity Event Entry\n"
+  },
+  {
+    "id": "VP-APP-ACTIVITY-007",
+    "title": "325. VP-APP-ACTIVITY-007 \u2014 Display saved manual activity events in the Activities chart",
+    "references": [],
+    "precondition": "Preconditions: At least one manually entered activity exists in the selected period; use Test Data with known activity type, duration and date/time.",
+    "mentions": [
+      "Preconditions: At least one manually entered activity exists in the selected period; use Test Data with known activity type, duration and date/time."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-204 / DO-787; DI-203 / DO-786\nPreconditions: At least one manually entered activity exists in the selected period; use Test Data with known activity type, duration and date/time.\nProcedure:\n1. Save or identify a manual exercise event and record its Activity, Duration, Intensity and date/time.\n2. On Home, locate the Activity chart and confirm its latest duration/time correspond to the manual event.\n3. Open Activities detail.\n4. Select a period containing the event.\n5. Inspect the time-based duration chart, By Activity Type section, Total/Average/Peak/Tracked tiles and Recent Entries.\nExpected result:\nThe manually entered event is represented in the Activities chart at the corresponding date/time with duration in minutes and contributes to its activity-type series. Activity types must be visually distinguishable as required by DO-787; if the implementation uses colour only without the required distinct patterns/legend, record the mismatch.\nRequired evidence: Screenshot of Activities detail showing the saved event, duration chart, activity-type grouping and supporting statistics.\nResult: Not run\nBatch 40 - Sickness / Note Event Entry\n"
+  },
+  {
+    "id": "VP-APP-SETTINGS-003",
+    "title": "339. VP-APP-SETTINGS-003 \u2014 Display the traceable application version/build",
+    "references": [],
+    "precondition": "Preconditions: Approved application semantic version and pipeline build for the verification build are recorded in Protocol Test Data.",
+    "mentions": [
+      "Preconditions: Approved application semantic version and pipeline build for the verification build are recorded in Protocol Test Data.",
+      "3. Compare it with Protocol Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-76 / DO-721\nPreconditions: Approved application semantic version and pipeline build for the verification build are recorded in Protocol Test Data.\nProcedure:\n1. Open the authenticated application version/App Info location.\n2. Record the displayed application version.\n3. Compare it with Protocol Test Data.\n4. Where OS installed-app information is available, compare the user-facing version/build there as well.\nExpected result:\nThe user-facing traceability string contains the approved semantic version and pipeline build in vmajor.vminor.vpatch.pipeline form and corresponds to the controlled verification build.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-USER-PROFILE-001",
+    "title": "342. VP-APP-USER-PROFILE-001 \u2014 Display complete required account profile",
+    "references": [],
+    "precondition": "Preconditions: Approved test-account values recorded in Test Data.",
+    "mentions": [
+      "Preconditions: Approved test-account values recorded in Test Data.",
+      "4. Compare them with the approved test-account values in Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-811 / DI-295\nPreconditions: Approved test-account values recorded in Test Data.\nProcedure:\n1. Open Settings > User Profile.\n2. Inspect the full User Profile screen.\n3. Record First Name, Last Name, Email, Phone Number, Gender, Date of Birth, Diabetes Type and Country.\n4. Compare them with the approved test-account values in Test Data.\nExpected result:\nAll profile fields required by DO-811 are available and correspond to the authenticated account; another user's profile data is not displayed.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-USER-PROFILE-002",
+    "title": "343. VP-APP-USER-PROFILE-002 \u2014 Update editable profile details using Save changes",
+    "references": [],
+    "precondition": "Preconditions: Internet available; original First Name, Last Name and Phone Number recorded.",
+    "mentions": [
+      "3. Change one supported editable field using approved test data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-811\nPreconditions: Internet available; original First Name, Last Name and Phone Number recorded.\nProcedure:\n1. Open Settings > User Profile.\n2. Record the current First Name, Last Name and Phone Number.\n3. Change one supported editable field using approved test data.\n4. Tap Save changes and wait for completion.\n5. Leave and reopen User Profile.\n6. Verify the saved value.\n7. Restore the original value and tap Save changes.\nExpected result:\nA supported profile change is saved and the saved server/account value is shown after reopening. Restoring the original value is also retained.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-USER-PROFILE-005",
+    "title": "346. VP-APP-USER-PROFILE-005 \u2014 Refresh profile from the account service and handle unavailable network",
+    "references": [],
+    "precondition": "Preconditions: Protocol Test Data contains the expected current profile values for the controlled account. Internet is initially available.",
+    "mentions": [
+      "Preconditions: Protocol Test Data contains the expected current profile values for the controlled account. Internet is initially available.",
+      "2. Allow the normal profile refresh and compare displayed values with Protocol Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-295 / DI-236 / DO-811\nPreconditions: Protocol Test Data contains the expected current profile values for the controlled account. Internet is initially available.\nProcedure:\n1. Open Settings > User Profile with internet available.\n2. Allow the normal profile refresh and compare displayed values with Protocol Test Data.\n3. Leave the screen.\n4. Disable Wi-Fi/mobile data using normal OS controls.\n5. Reopen User Profile and observe the unavailable-network/retry behavior.\n6. Restore internet.\n7. Use the presented retry action or re-enter the screen and observe the refreshed profile.\nExpected result:\nWith connectivity, current profile data are refreshed from the account service. If refresh cannot complete, the app does not falsely present an unverified refresh as confirmed-current; retained profile data may remain visible with appropriate retry/information. After connectivity returns, refresh succeeds without mixing data from another account.\nRequired evidence: screenshots, execution record\nResult: Not run\nBatch 44 - Reminder Settings / Glucose Thresholds\n"
+  },
+  {
+    "id": "VP-APP-EMERGENCY-001",
+    "title": "355. VP-APP-EMERGENCY-001 \u2014 Configure and save an emergency contact after the required test-call step",
+    "references": [],
+    "precondition": "Preconditions: Emergency Contact settings are available. Protocol Test Data contains a well-formed controlled phone number.",
+    "mentions": [
+      "Preconditions: Emergency Contact settings are available. Protocol Test Data contains a well-formed controlled phone number."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-174 / DO-866\nPreconditions: Emergency Contact settings are available. Protocol Test Data contains a well-formed controlled phone number.\nProcedure:\n1. Open Emergency Contact settings.\n2. Enter the controlled phone number.\n3. Before saving, use the required test-call/dialler action.\n4. Verify the native dialler opens with the entered number and do not place the call.\n5. Return to the app and complete Save.\n6. Reopen the setting and verify the saved number.\nExpected result:\nA well-formed emergency phone number can be saved only after the required user test-call/dialler step. The native dialler is opened for user confirmation; the app does not place a call automatically. The successfully saved number is retained.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-EMERGENCY-002",
+    "title": "356. VP-APP-EMERGENCY-002 \u2014 Reject malformed emergency phone number",
+    "references": [],
+    "precondition": "Preconditions: Approved invalid test number in Test Data.",
+    "mentions": [
+      "Preconditions: Approved invalid test number in Test Data.",
+      "2. Enter a clearly invalid/malformed test phone number from Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-866 phone-number validation\nPreconditions: Approved invalid test number in Test Data.\nProcedure:\n1. Open Emergency Contact.\n2. Enter a clearly invalid/malformed test phone number from Test Data.\n3. Observe the validation.\n4. Attempt to save.\nExpected result:\nA malformed phone number is not accepted as a valid emergency contact and visible validation is presented. No unapproved exact digit boundary is used as the formal acceptance criterion.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-PASSWORD-003",
+    "title": "375. VP-APP-PASSWORD-003 \u2014 Reject incorrect current password",
+    "references": [],
+    "precondition": "Preconditions: Approved intentionally incorrect password in Test Data.",
+    "mentions": [
+      "Preconditions: Approved intentionally incorrect password in Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-876\nPreconditions: Approved intentionally incorrect password in Test Data.\nProcedure:\n1. Open Change Password.\n2. Enter the current test-account email if required.\n3. Enter the intentionally incorrect password.\n4. Tap Sign In.\nExpected result:\nAuthentication fails and the user is not permitted to continue to password modification.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-PASSWORD-004",
+    "title": "376. VP-APP-PASSWORD-004 \u2014 Change password using valid new credentials",
+    "references": [],
+    "precondition": "Preconditions: Current account has been authenticated in the hosted flow. Use a valid new password accepted by the controlled account-management flow; do not invent length/complexity rules.",
+    "mentions": [
+      "6. Restore the original controlled password after evidence capture if required by Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-239 / DO-876\nPreconditions: Current account has been authenticated in the hosted flow. Use a valid new password accepted by the controlled account-management flow; do not invent length/complexity rules.\nProcedure:\n1. Enter a valid new password and matching confirmation as required by the hosted flow.\n2. Complete the password change.\n3. Sign out if required for credential verification.\n4. Verify the previous password no longer authenticates.\n5. Verify the new password authenticates.\n6. Restore the original controlled password after evidence capture if required by Test Data.\nExpected result:\nThe hosted account-management flow accepts a valid new password according to its controlled policy. After completion, the old password no longer authenticates and the new password does. No unapproved numeric password rule is applied by this PRT case.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-LOGOUT-006",
+    "title": "383. VP-APP-LOGOUT-006 \u2014 Delayed notification after logout does not expose the previous user's protected data",
+    "references": [],
+    "precondition": "Preconditions: Approved test setup can produce/deliver a delayed notification. Account A is logged in initially; disposable Account B is available where required.",
+    "mentions": [
+      "The delayed notification does not expose Account A protected clinical information to Account B and does not reopen Account A authenticated content after logout. If the controlled environment cannot produce the condition, record a Test Data / environment dependency rather than manipulating backend data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Approved test setup can produce/deliver a delayed notification. Account A is logged in initially; disposable Account B is available where required.\nProcedure:\n1. While signed into Account A, establish the approved condition that can result in a delayed notification.\n2. Log out of Account A.\n3. Where required, sign in to Account B.\n4. Receive the delayed notification intended for Account A.\n5. Observe its content and tap it.\n6. Observe which account/app content opens.\nExpected result:\nThe delayed notification does not expose Account A protected clinical information to Account B and does not reopen Account A authenticated content after logout. If the controlled environment cannot produce the condition, record a Test Data / environment dependency rather than manipulating backend data.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-DELETE-002",
+    "title": "386. VP-APP-DELETE-002 \u2014 Require the current password before submitting deletion",
+    "references": [],
+    "precondition": "Preconditions: Disposable authenticated account; current account password recorded in controlled Test Data.",
+    "mentions": [
+      "Preconditions: Disposable authenticated account; current account password recorded in controlled Test Data.",
+      "4. If a password field is provided, enter an intentionally incorrect password from Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Disposable authenticated account; current account password recorded in controlled Test Data.\nProcedure:\n1. Open Settings > Account Security > Delete Account.\n2. Inspect the confirmation input required before deletion.\n3. Attempt to continue without the current account password.\n4. If a password field is provided, enter an intentionally incorrect password from Test Data.\n5. Attempt to continue.\nExpected result:\nAccount deletion cannot be submitted without confirmation using the current account password. Missing or incorrect current-password confirmation is rejected and no deletion occurs. If the implementation requests a different credential instead of the required current password, record the exact requirement mismatch.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-LANGUAGE-001",
+    "title": "390. VP-APP-LANGUAGE-001 \u2014 Display available regional languages and current selection",
+    "references": [],
+    "precondition": "Preconditions: Protocol Test Data identifies the account region and approved supported-language list for that region.",
+    "mentions": [
+      "Preconditions: Protocol Test Data identifies the account region and approved supported-language list for that region."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-878/DO-666 as applicable\nPreconditions: Protocol Test Data identifies the account region and approved supported-language list for that region.\nProcedure:\n1. Open Settings > Language.\n2. Record every selectable language displayed.\n3. Record which language has the active-selection indicator.\nExpected result:\nThe Language screen shows the languages approved for the authenticated account region and identifies the current selection. If the controlled region-language matrix is unavailable, the exact list comparison is BLOCKED - Reference Gap rather than inferred from the UI.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-LANGUAGE-005",
+    "title": "394. VP-APP-LANGUAGE-005 \u2014 Select supported phone language or regional fallback during initial language setup",
+    "references": [],
+    "precondition": "Preconditions: Protocol Test Data identifies the account region, one supported phone language, one unsupported phone language, the approved regional fallback, and the approved fresh initial-language condition.",
+    "mentions": [
+      "Preconditions: Protocol Test Data identifies the account region, one supported phone language, one unsupported phone language, the approved regional fallback, and the approved fresh initial-language condition.",
+      "2. Set the phone language to the supported language in Test Data.",
+      "5. Set the phone language to the unsupported language in Test Data.",
+      "With a supported phone language, the matching regional language is selected and persisted. With an unsupported phone language, the approved regional fallback from Test Data is selected and persisted. If the approved fallback is not supplied, that comparison is BLOCKED - Reference Gap."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DO-879/DO-667 as applicable\nPreconditions: Protocol Test Data identifies the account region, one supported phone language, one unsupported phone language, the approved regional fallback, and the approved fresh initial-language condition.\nProcedure:\n1. Establish the approved fresh initial-language condition.\n2. Set the phone language to the supported language in Test Data.\n3. Sign in, open Settings > Language and record the selection.\n4. Re-establish the approved fresh initial-language condition.\n5. Set the phone language to the unsupported language in Test Data.\n6. Sign in, open Settings > Language and record the selection.\nExpected result:\nWith a supported phone language, the matching regional language is selected and persisted. With an unsupported phone language, the approved regional fallback from Test Data is selected and persisted. If the approved fallback is not supplied, that comparison is BLOCKED - Reference Gap.\nRequired evidence: screenshots, execution record\nResult: Not run\nBatch 53 - Theme\n"
+  },
+  {
+    "id": "VP-APP-THEME-007",
+    "title": "401. VP-APP-THEME-007 \u2014 Clinical states are not communicated by colour alone",
+    "references": [],
+    "precondition": "Preconditions: Approved test data/screens can display representative very-low/low/in-range/high and applicable alarm/disconnection states.",
+    "mentions": [
+      "Preconditions: Approved test data/screens can display representative very-low/low/in-range/high and applicable alarm/disconnection states."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-708 / DO-763\nPreconditions: Approved test data/screens can display representative very-low/low/in-range/high and applicable alarm/disconnection states.\nProcedure:\n1. Display representative clinical states. 2. For each state, inspect the colour treatment and accompanying text/icon/pattern/status cue. 3. Repeat in Light and Dark themes where applicable.\nExpected result:\nClinical states that use colour also provide a non-colour cue such as text, icon, label or other distinguishable presentation so the state is understandable without relying only on colour differences.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-MYCGM-003",
+    "title": "405. VP-APP-MYCGM-003 \u2014 Display the connected CGM firmware version",
+    "references": [],
+    "precondition": "Preconditions: Controlled transmitter is connected; approved transmitter firmware version is recorded in Protocol Test Data/test-kit record.",
+    "mentions": [
+      "Preconditions: Controlled transmitter is connected; approved transmitter firmware version is recorded in Protocol Test Data/test-kit record.",
+      "1. Record the approved firmware version from Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Controlled transmitter is connected; approved transmitter firmware version is recorded in Protocol Test Data/test-kit record.\nProcedure:\n1. Record the approved firmware version from Test Data.\n2. Open My CGM.\n3. Read the value shown beside Firmware.\n4. Compare the values.\nExpected result:\nThe app displays the firmware version of the connected CGM and it matches the controlled transmitter firmware version.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-MYCGM-006",
+    "title": "408. VP-APP-MYCGM-006 \u2014 Pair-new-device action warns before replacing the current CGM",
+    "references": [],
+    "precondition": "Preconditions: My CGM is available. Proceed beyond the warning only under the controlled replacement condition defined in Protocol Test Data.",
+    "mentions": [
+      "Preconditions: My CGM is available. Proceed beyond the warning only under the controlled replacement condition defined in Protocol Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: applicable transmitter replacement/pairing requirements\nPreconditions: My CGM is available. Proceed beyond the warning only under the controlled replacement condition defined in Protocol Test Data.\nProcedure:\n1. Open My CGM.\n2. Tap Pair new device.\n3. Read the confirmation message.\n4. Select No and verify the current state is unchanged.\n5. Reopen Pair new device.\n6. Only when the controlled replacement condition permits it, select Yes and observe the next flow.\nExpected result:\nPair New Device does not silently replace the current CGM. Where the action is available, deliberate confirmation is required before leaving the current CGM context. Proceeding beyond the warning is accepted only under the controlled replacement condition; the case does not assert that active-session replacement is universally permitted.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-MYCGM-009",
+    "title": "411. VP-APP-MYCGM-009 \u2014 Sensor-expiry advance reminders and final expiry notification",
+    "references": [],
+    "precondition": "Preconditions: BLOCKED - Reference/Acceptance Gap for exact advance-reminder timing until Quality/RA/Product supplies the approved sensor-expiry reminder schedule in Protocol Test Data. Notification permission is enabled.",
+    "mentions": [
+      "Preconditions: BLOCKED - Reference/Acceptance Gap for exact advance-reminder timing until Quality/RA/Product supplies the approved sensor-expiry reminder schedule in Protocol Test Data. Notification permission is enabled.",
+      "2. If the approved reminder schedule is supplied in Test Data, observe each controlled advance-expiry reminder point."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-845 / DO-943\nPreconditions: BLOCKED - Reference/Acceptance Gap for exact advance-reminder timing until Quality/RA/Product supplies the approved sensor-expiry reminder schedule in Protocol Test Data. Notification permission is enabled.\nProcedure:\n1. Record sensor remaining time.\n2. If the approved reminder schedule is supplied in Test Data, observe each controlled advance-expiry reminder point.\n3. Continue to the final expiry condition.\n4. Observe final notification priority and My CGM/Home session state.\nExpected result:\nThe requirement calls for advance replacement reminders, periodic reminders up to expiry, and a higher-priority expiry notification indicating the CGM no longer produces session data. Exact reminder timing/cadence is BLOCKED until the controlled schedule is supplied; no schedule is invented by the tester.\nRequired evidence: Screenshots/recording as applicable; execution record\nResult: Not run\nBatch 55 - Share / Follow\n"
+  },
+  {
+    "id": "VP-APP-SHARE-001",
+    "title": "412. VP-APP-SHARE-001 \u2014 View current outgoing and incoming sharing relationships",
+    "references": [],
+    "precondition": "Preconditions: Applicable sharing requirements. Protocol Test Data identifies known outgoing/incoming relationships, identities, shared categories and statuses where required.",
+    "mentions": [
+      "Preconditions: Applicable sharing requirements. Protocol Test Data identifies known outgoing/incoming relationships, identities, shared categories and statuses where required.",
+      "3. Where Test Data includes active outgoing and/or incoming relationships, locate each known test account.",
+      "Shared By Me and Shared With Me states correspond to controlled Test Data. Known active relationships appear in the correct direction with the correct identity, shared data categories and current relationship status; the view does not rely on stale relationship state after normal refresh/re-entry."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Applicable sharing requirements. Protocol Test Data identifies known outgoing/incoming relationships, identities, shared categories and statuses where required.\nProcedure:\n1. Open Settings > Share / Follow.\n2. Inspect the relationship sections presented by the app.\n3. Where Test Data includes active outgoing and/or incoming relationships, locate each known test account.\nExpected result:\nShared By Me and Shared With Me states correspond to controlled Test Data. Known active relationships appear in the correct direction with the correct identity, shared data categories and current relationship status; the view does not rely on stale relationship state after normal refresh/re-entry.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-SHARE-002",
+    "title": "413. VP-APP-SHARE-002 \u2014 Create a sharing invitation with selected data categories",
+    "references": [],
+    "precondition": "Preconditions: Sharing requirement corresponding to GG 468. Disposable sender Account A and recipient Account B are available; recipient registered email is recorded in Test Data.",
+    "mentions": [
+      "Preconditions: Sharing requirement corresponding to GG 468. Disposable sender Account A and recipient Account B are available; recipient registered email is recorded in Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Sharing requirement corresponding to GG 468. Disposable sender Account A and recipient Account B are available; recipient registered email is recorded in Test Data.\nProcedure:\n1. Sign in as Account A and open Share / Follow.\n2. Start a new invitation to Account B.\n3. Verify no health-data category is unintentionally shared by default.\n4. Record the available categories; verify at least the controlled minimum categories are represented.\n5. Attempt to continue with no category selected where the UI permits.\n6. Select one or more controlled categories and record them.\n7. Send the invitation once.\nExpected result:\nSharing is opt-in per data type. The sender explicitly selects the intended sharing scope; unselected categories are not included, and the invitation is not dispatched with an unintended empty/default-all scope.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-SHARE-004",
+    "title": "415. VP-APP-SHARE-004 \u2014 Recipient accepts invitation using the required OTP verification flow",
+    "references": [],
+    "precondition": "Preconditions: Sharing requirement corresponding to GG 469. Incoming invitation is available to disposable Account B and the recipient can access the registered email inbox. Approved invalid/expired OTP test data/state is available where required.",
+    "mentions": [
+      "Preconditions: Sharing requirement corresponding to GG 469. Incoming invitation is available to disposable Account B and the recipient can access the registered email inbox. Approved invalid/expired OTP test data/state is available where required.",
+      "OTP acceptance succeeds only when the backend accepts the current valid value. Invalid or expired OTP is rejected with an error and leaves the invitation inactive. If an expired OTP condition cannot be produced through approved Test Data, only that portion is Blocked - Test Data Dependency; no OTP lifetime is invented."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: \u2014\nPreconditions: Sharing requirement corresponding to GG 469. Incoming invitation is available to disposable Account B and the recipient can access the registered email inbox. Approved invalid/expired OTP test data/state is available where required.\nProcedure:\n1. Open the pending invitation as Account B.\n2. Enter an approved intentionally invalid OTP and verify failure/inactive state.\n3. Where an approved expired OTP condition is available, enter the expired OTP and verify failure/inactive state.\n4. Obtain the current valid OTP from the registered email.\n5. Enter the valid OTP.\n6. Return to Share / Follow on both accounts and observe the relationship.\nExpected result:\nOTP acceptance succeeds only when the backend accepts the current valid value. Invalid or expired OTP is rejected with an error and leaves the invitation inactive. If an expired OTP condition cannot be produced through approved Test Data, only that portion is Blocked - Test Data Dependency; no OTP lifetime is invented.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-ABOUT-002",
+    "title": "423. VP-APP-ABOUT-002 \u2014 Display version, build and release information",
+    "references": [],
+    "precondition": "Preconditions: Approved semantic version, pipeline build and release information are recorded in Protocol Test Data.",
+    "mentions": [
+      "Preconditions: Approved semantic version, pipeline build and release information are recorded in Protocol Test Data.",
+      "4. Compare with Protocol Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-76 / DO-721 and DO-700\nPreconditions: Approved semantic version, pipeline build and release information are recorded in Protocol Test Data.\nProcedure:\n1. Open About and record the displayed version/build/release information.\n2. Verify the user-facing traceability string contains the controlled semantic version and pipeline build in vmajor.vminor.vpatch.pipeline form.\n3. Open OS installed-app information and compare the user-facing version/build where available.\n4. Compare with Protocol Test Data.\nExpected result:\nThe authenticated About view presents the controlled traceable version/build and applicable release information. The traceability string matches vmajor.vminor.vpatch.pipeline and corresponds to the verification build.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-ABOUT-003",
+    "title": "424. VP-APP-ABOUT-003 \u2014 Display controlled manufacturer, region and responsible-person information",
+    "references": [],
+    "precondition": "Preconditions: Protocol Test Data identifies the approved manufacturer name, registered address, account region, region-specific responsible-person details and product description.",
+    "mentions": [
+      "Preconditions: Protocol Test Data identifies the approved manufacturer name, registered address, account region, region-specific responsible-person details and product description.",
+      "5. Compare all values with Protocol Test Data."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-55 / DO-700\nPreconditions: Protocol Test Data identifies the approved manufacturer name, registered address, account region, region-specific responsible-person details and product description.\nProcedure:\n1. Open About.\n2. Record manufacturer company name and registered address.\n3. Record the displayed account region and region-specific responsible-person information.\n4. Record the product description.\n5. Compare all values with Protocol Test Data.\nExpected result:\nThe About information matches the controlled manufacturer, registered address, account-region/responsible-person and product-description reference. UDI-DI/device-class fields are not made formal acceptance criteria unless separately controlled.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-ABOUT-004",
+    "title": "425. VP-APP-ABOUT-004 \u2014 Open support contact destinations",
+    "references": [],
+    "precondition": "Preconditions: Protocol Test Data identifies the approved support email, telephone number and regional support destination for the account region. Required OS apps are available.",
+    "mentions": [
+      "Preconditions: Protocol Test Data identifies the approved support email, telephone number and regional support destination for the account region. Required OS apps are available."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-127 / DO-765\nPreconditions: Protocol Test Data identifies the approved support email, telephone number and regional support destination for the account region. Required OS apps are available.\nProcedure:\n1. Under Contact, tap the Support email and observe the destination without sending a message.\n2. Return to About.\n3. Tap the Clinician phone entry and observe the phone action without completing a call.\n4. Return to About.\n5. Tap the Web link.\nExpected result:\nDisplayed contact details match the approved regional support reference, and each actionable contact opens the corresponding email/phone/regional support destination without initiating an unintended message or call.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  },
+  {
+    "id": "VP-APP-ABOUT-005",
+    "title": "426. VP-APP-ABOUT-005 \u2014 Open legal resources",
+    "references": [],
+    "precondition": "Preconditions: Internet is available. Exact document versions/URLs are compared only when supplied in controlled Test Data.",
+    "mentions": [
+      "Preconditions: Internet is available. Exact document versions/URLs are compared only when supplied in controlled Test Data.",
+      "The latest Terms of Service can be opened after login and returning does not alter authentication/profile/sensor state. Other displayed legal resources open their corresponding destinations. Controlled version/URL comparison is performed only where Test Data defines it."
+    ],
+    "body": "\nManual - Real Device \u00b7 Req: DI-232 / DO-807 for Terms of Service\nPreconditions: Internet is available. Exact document versions/URLs are compared only when supplied in controlled Test Data.\nProcedure:\n1. Open About > Legal.\n2. Open Terms of Service and verify the current legal resource loads; return to About.\n3. Verify authentication/current sensor state is unchanged.\n4. Open Privacy Policy and Open-source licences where provided, then return.\n5. If an approved network-loss check is included, verify Terms failure provides appropriate error/retry rather than silently confirming stale content.\nExpected result:\nThe latest Terms of Service can be opened after login and returning does not alter authentication/profile/sensor state. Other displayed legal resources open their corresponding destinations. Controlled version/URL comparison is performed only where Test Data defines it.\nRequired evidence: screenshots, execution record\nResult: Not run\n"
+  }
+]

@@ -1,0 +1,39 @@
+
+$glucorx/modus/v1alpha2/binding.protoglucorx.modus.v1alpha2"÷
+Device
+name (	BàA<
+transmitter (	B'àAúA!
+modus.glucorx.co.uk/Transmitter
+key_generation (BàA4
+create_time (2.google.protobuf.TimestampBàA4
+update_time (2.google.protobuf.TimestampBàA<
+transmitter_batch (	B!àAúA
+modus.glucorx.co.uk/Batch:UêAR
+modus.glucorx.co.uk/Device#patients/{patient}/devices/{device}*devices2device"§
+RegisterTransmitterRequest5
+name (	B'àAúA!
+modus.glucorx.co.uk/Transmitter4
+patient (	B#àAúA
+modus.glucorx.co.uk/Patient
+challenge_token (BàA"¶
+RegisterTransmitterResponse
+session_key (BàA
+response_token (BàA3
+device (2.glucorx.modus.v1alpha2.DeviceBàA+
+expire_date (2.google.type.DateBàA"D
+GetDeviceRequest0
+name (	B"àAúA
+modus.glucorx.co.uk/Device"z
+ListDevicesRequest3
+parent (	B#àAúA
+modus.glucorx.co.uk/Patient
+	page_size (BàA
+
+page_token (	BàA"_
+ListDevicesResponse/
+devices (2.glucorx.modus.v1alpha2.Device
+next_page_token (	"G
+DeleteDeviceRequest0
+name (	B"àAúA
+modus.glucorx.co.uk/DeviceB.
+uk.co.glucorx.modus.v1alpha2BBindingProtoPbproto3

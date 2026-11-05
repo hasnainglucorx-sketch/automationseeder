@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PRT-0701 Case Review</title>
+<style>
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface-2:#22263a;--border:#2e3250;
+  --accent:#4f8ef7;--accent-weak:rgba(79,142,247,.13);
+  --text:#e8eaf0;--text-dim:#a0a8c0;--text-faint:#606880;
+  --pass:#22c55e;--fail:#ef4444;--changed:#f59e0b;--pending:#6366f1;
+  --radius:10px;--font:'IBM Plex Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── HEADER ── */
+#hdr{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+#hdr h1{font-size:15px;font-weight:700;flex:1}
+#hdr .chip{font-size:11px;background:var(--accent-weak);color:var(--accent);border-radius:20px;padding:3px 10px;font-weight:600}
+#hdr .stats{font-size:11px;color:var(--text-faint)}
+.hbtn{padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--font)}
+#btn-export{background:var(--accent);color:#fff}
+#btn-export:hover{opacity:.85}
+#btn-reset-all{background:var(--surface-2);color:var(--text-dim);border:1px solid var(--border)}
+#btn-reset-all:hover{color:var(--text)}
+
+/* ── LAYOUT ── */
+#layout{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ── */
+#sidebar{width:280px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+#sb-top{padding:10px 10px 6px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+#search{width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 10px;font-size:12px;font-family:var(--font);outline:none}
+#search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+#filter-row{display:flex;gap:5px;flex-wrap:wrap}
+.fbtn{font-size:10px;padding:3px 8px;border-radius:5px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-dim);cursor:pointer;font-family:var(--font)}
+.fbtn.active{background:var(--accent-weak);color:var(--accent);border-color:var(--accent)}
+#list{flex:1;overflow-y:auto;padding:4px 6px}
+.row{display:flex;align-items:flex-start;gap:8px;padding:8px 8px;border-radius:8px;cursor:pointer;margin-bottom:2px;border:1px solid transparent}
+.row:hover{background:var(--surface-2)}
+.row.sel{background:var(--accent-weak);border-color:var(--accent)}
+.row-id{font-size:9px;font-weight:700;color:var(--text-faint);font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.row-title{font-size:12px;color:var(--text-dim);flex:1;line-height:1.3}
+.row.sel .row-title{color:var(--text)}
+.badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.badge-changed{background:rgba(245,158,11,.18);color:var(--changed)}
+.badge-reviewed{background:rgba(34,197,94,.15);color:var(--pass)}
+.badge-pending{background:rgba(99,102,241,.15);color:var(--pending)}
+
+/* ── DETAIL ── */
+#detail{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#det-hdr{padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:10px}
+#det-id{font-size:10px;font-weight:700;color:var(--accent);font-family:'IBM Plex Mono',monospace}
+#det-title-text{font-size:15px;font-weight:700;flex:1}
+#det-sec{font-size:10px;color:var(--text-faint)}
+.det-actions{display:flex;gap:7px}
+.abtn{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:var(--font)}
+#btn-reviewed{background:rgba(34,197,94,.15);color:var(--pass);border:1px solid rgba(34,197,94,.3)}
+#btn-reviewed.active{background:var(--pass);color:#fff}
+#btn-reset{background:var(--surface-2);color:var(--text-faint);border:1px solid var(--border)}
+#btn-reset:hover{color:var(--text)}
+
+#det-body{flex:1;overflow-y:auto;padding:16px}
+#no-sel{display:flex;align-items:center;justify-content:center;flex:1;color:var(--text-faint);font-size:14px}
+
+.field-block{margin-bottom:14px}
+.field-block label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-faint);display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.changed-dot{width:6px;height:6px;border-radius:50%;background:var(--changed);display:inline-block}
+.field-block textarea,.field-block input[type=text]{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);
+  color:var(--text);border-radius:8px;padding:9px 11px;font-size:13px;
+  font-family:var(--font);outline:none;resize:vertical;line-height:1.5
+}
+.field-block textarea:focus,.field-block input[type=text]:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.field-block textarea.changed,.field-block input.changed{border-color:var(--changed)}
+#f-title{font-size:14px;font-weight:600}
+
+/* ── FOOTER ── */
+#det-foot{padding:10px 16px;border-top:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:10px}
+#save-msg{font-size:11px;color:var(--text-faint);flex:1;font-style:italic}
+.nav-btn{padding:5px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface-2);color:var(--text-dim);font-family:var(--font)}
+.nav-btn:hover{color:var(--text)}
+
+/* ── EMPTY ── */
+#empty{padding:20px;color:var(--text-faint);font-size:13px;text-align:center}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <h1>PRT-0701 Case Review</h1>
+  <span class="chip">Final Review</span>
+  <span class="stats" id="hdr-stats"></span>
+  <button class="hbtn" id="btn-reset-all">Reset All Changes</button>
+  <button class="hbtn" id="btn-export">⬇ Export Updated JSON</button>
+</div>
+
+<div id="layout">
+  <div id="sidebar">
+    <div id="sb-top">
+      <input id="search" placeholder="Search ID or title…" oninput="applyFilter()">
+      <div id="filter-row">
+        <button class="fbtn active" data-f="all">All</button>
+        <button class="fbtn" data-f="changed">Changed</button>
+        <button class="fbtn" data-f="reviewed">Reviewed</button>
+        <button class="fbtn" data-f="pending">Pending</button>
+      </div>
+    </div>
+    <div id="list"></div>
+  </div>
+
+  <div id="detail">
+    <div id="no-sel">← Select a case to review</div>
+    <div id="det-inner" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div id="det-hdr">
+        <div>
+          <div id="det-id"></div>
+          <div id="det-title-text"></div>
+          <div id="det-sec"></div>
+        </div>
+        <div class="det-actions">
+          <button class="abtn" id="btn-reviewed">✓ Mark Reviewed</button>
+          <button class="abtn" id="btn-reset">↺ Reset Case</button>
+        </div>
+      </div>
+      <div id="det-body">
+        <div class="field-block">
+          <label>Title <span class="changed-dot" id="dot-t" style="display:none"></span></label>
+          <input type="text" id="f-title" oninput="fieldChanged('t','f-title')">
+        </div>
+        <div class="field-block">
+          <label>Preconditions <span class="changed-dot" id="dot-pre" style="display:none"></span></label>
+          <textarea id="f-pre" rows="3" oninput="fieldChanged('pre','f-pre')"></textarea>
+        </div>
+        <div class="field-block">
+          <label>Procedure <span class="changed-dot" id="dot-proc" style="display:none"></span></label>
+          <textarea id="f-proc" rows="6" oninput="fieldChanged('proc','f-proc')"></textarea>
+        </div>
+        <div class="field-block">
+          <label>Expected Result <span class="changed-dot" id="dot-exp" style="display:none"></span></label>
+          <textarea id="f-exp" rows="6" oninput="fieldChanged('exp','f-exp')"></textarea>
+        </div>
+        <div class="field-block">
+          <label>Evidence Required <span class="changed-dot" id="dot-ev" style="display:none"></span></label>
+          <textarea id="f-ev" rows="2" oninput="fieldChanged('ev','f-ev')"></textarea>
+        </div>
+        <div class="field-block">
+          <label>Requirement</label>
+          <input type="text" id="f-req" oninput="fieldChanged('req','f-req')">
+        </div>
+      </div>
+      <div id="det-foot">
+        <span id="save-msg"></span>
+        <button class="nav-btn" onclick="navCase(-1)">◀ Prev</button>
+        <button class="nav-btn" onclick="navCase(1)">Next ▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+var CASES = [];
+var edits = {};      // id -> {t, pre, proc, exp, ev, req, reviewed}
+var selId = null;
+var filteredIds = [];
+var activeFilter = 'all';
+var LS_KEY = 'PRT0701_review_edits';
+
+// ── LOAD ──────────────────────────────────────────────────────────────────────
+try { edits = JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch(e) {}
+
+fetch('output/console-update/PRT-0701-cases.json')
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    CASES = data;
+    applyFilter();
+    updateHeaderStats();
+  })
+  .catch(function(err){
+    document.getElementById('list').innerHTML = '<div id="empty">Could not load PRT-0701-cases.json<br>' + err.message + '</div>';
+  });
+
+// ── FILTER / LIST ─────────────────────────────────────────────────────────────
+function applyFilter(){
+  var q = document.getElementById('search').value.trim().toLowerCase();
+  filteredIds = CASES.filter(function(c){
+    var e = edits[c.id] || {};
+    var status = caseStatus(c.id);
+    if (activeFilter === 'changed'  && status !== 'changed')  return false;
+    if (activeFilter === 'reviewed' && status !== 'reviewed') return false;
+    if (activeFilter === 'pending'  && status !== 'pending')  return false;
+    if (q && !(c.id.toLowerCase().includes(q) || c.t.toLowerCase().includes(q))) return false;
+    return true;
+  }).map(function(c){ return c.id; });
+  renderList();
+}
+
+function caseStatus(id){
+  var e = edits[id];
+  if (!e) return 'pending';
+  if (e.reviewed) return 'reviewed';
+  var orig = CASES.find(function(c){ return c.id === id; });
+  if (!orig) return 'pending';
+  var fields = ['t','pre','proc','exp','ev','req'];
+  for (var i=0; i<fields.length; i++){
+    var f = fields[i];
+    if (e[f] !== undefined && e[f] !== orig[f]) return 'changed';
+  }
+  return 'pending';
+}
+
+function renderList(){
+  var html = '';
+  if (!filteredIds.length){ document.getElementById('list').innerHTML = '<div id="empty">No cases match.</div>'; return; }
+  var lastSec = null;
+  filteredIds.forEach(function(id){
+    var c = CASES.find(function(x){ return x.id === id; });
+    if (!c) return;
+    if (c.sec !== lastSec){
+      html += '<div style="font-size:9px;font-weight:700;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;padding:10px 8px 4px">' + esc(c.sec) + '</div>';
+      lastSec = c.sec;
+    }
+    var status = caseStatus(id);
+    var badge = '';
+    if (status === 'changed')  badge = '<span class="badge badge-changed">Changed</span>';
+    if (status === 'reviewed') badge = '<span class="badge badge-reviewed">Reviewed</span>';
+    var title = ((edits[id]||{}).t) || c.t;
+    html += '<div class="row' + (selId === id ? ' sel' : '') + '" data-id="' + esc(id) + '" onclick="openCase(\'' + esc(id) + '\')">'
+      + '<div><div class="row-id">' + esc(id) + '</div><div class="row-title">' + esc(title) + '</div></div>'
+      + badge + '</div>';
+  });
+  document.getElementById('list').innerHTML = html;
+}
+
+// ── DETAIL ────────────────────────────────────────────────────────────────────
+function openCase(id){
+  selId = id;
+  var c = CASES.find(function(x){ return x.id === id; });
+  if (!c) return;
+  var e = edits[id] || {};
+
+  document.getElementById('no-sel').style.display = 'none';
+  document.getElementById('det-inner').style.display = 'flex';
+
+  document.getElementById('det-id').textContent = id;
+  document.getElementById('det-title-text').textContent = e.t || c.t;
+  document.getElementById('det-sec').textContent = c.sec;
+
+  document.getElementById('f-title').value = e.t !== undefined ? e.t : c.t;
+  document.getElementById('f-pre').value   = e.pre  !== undefined ? e.pre  : c.pre;
+  document.getElementById('f-proc').value  = e.proc !== undefined ? e.proc : c.proc;
+  document.getElementById('f-exp').value   = e.exp  !== undefined ? e.exp  : c.exp;
+  document.getElementById('f-ev').value    = e.ev   !== undefined ? e.ev   : c.ev;
+  document.getElementById('f-req').value   = e.req  !== undefined ? e.req  : (c.req || '');
+
+  var fieldMap = {t:'f-title',pre:'f-pre',proc:'f-proc',exp:'f-exp',ev:'f-ev',req:'f-req'};
+  Object.keys(fieldMap).forEach(function(key){
+    var dotId = 'dot-' + (key === 't' ? 't' : key);
+    var dot = document.getElementById(dotId);
+    var el  = document.getElementById(fieldMap[key]);
+    var changed = e[key] !== undefined && e[key] !== c[key];
+    if (dot) dot.style.display = changed ? 'inline-block' : 'none';
+    if (el) el.classList.toggle('changed', changed);
+  });
+
+  var rev = !!(e.reviewed);
+  var rb = document.getElementById('btn-reviewed');
+  rb.textContent = rev ? '✓ Reviewed' : '✓ Mark Reviewed';
+  rb.classList.toggle('active', rev);
+
+  document.getElementById('save-msg').textContent = '';
+  renderList();
+}
+
+function fieldChanged(key, elId){
+  if (!selId) return;
+  var c = CASES.find(function(x){ return x.id === selId; });
+  if (!c) return;
+  var val = document.getElementById(elId).value;
+  if (!edits[selId]) edits[selId] = {};
+  edits[selId][key] = val;
+  var orig = c[key] || '';
+  var changed = val !== orig;
+  var dotId = 'dot-' + (key === 't' ? 't' : key);
+  var dot = document.getElementById(dotId);
+  var el  = document.getElementById(elId);
+  if (dot) dot.style.display = changed ? 'inline-block' : 'none';
+  if (el) el.classList.toggle('changed', changed);
+  if (key === 't') document.getElementById('det-title-text').textContent = val;
+  saveEdits();
+  updateHeaderStats();
+  renderList();
+  document.getElementById('save-msg').textContent = 'Auto-saved ' + new Date().toLocaleTimeString();
+}
+
+document.getElementById('btn-reviewed').addEventListener('click', function(){
+  if (!selId) return;
+  if (!edits[selId]) edits[selId] = {};
+  edits[selId].reviewed = !edits[selId].reviewed;
+  saveEdits();
+  openCase(selId);
+  updateHeaderStats();
+});
+
+document.getElementById('btn-reset').addEventListener('click', function(){
+  if (!selId) return;
+  delete edits[selId];
+  saveEdits();
+  openCase(selId);
+  updateHeaderStats();
+});
+
+document.getElementById('btn-reset-all').addEventListener('click', function(){
+  if (!confirm('Reset ALL changes? This cannot be undone.')) return;
+  edits = {};
+  saveEdits();
+  if (selId) openCase(selId);
+  updateHeaderStats();
+  renderList();
+});
+
+function navCase(dir){
+  if (!selId) return;
+  var i = filteredIds.indexOf(selId);
+  if (i === -1) return;
+  var next = filteredIds[i + dir];
+  if (next) openCase(next);
+}
+
+// ── FILTER BUTTONS ────────────────────────────────────────────────────────────
+document.querySelectorAll('.fbtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    activeFilter = btn.getAttribute('data-f');
+    document.querySelectorAll('.fbtn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    applyFilter();
+  });
+});
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function updateHeaderStats(){
+  var changed = 0, reviewed = 0;
+  CASES.forEach(function(c){
+    var s = caseStatus(c.id);
+    if (s === 'changed')  changed++;
+    if (s === 'reviewed') reviewed++;
+  });
+  document.getElementById('hdr-stats').textContent =
+    changed + ' changed  ·  ' + reviewed + ' reviewed  ·  ' + CASES.length + ' total';
+}
+
+// ── PERSIST ───────────────────────────────────────────────────────────────────
+function saveEdits(){
+  try { localStorage.setItem(LS_KEY, JSON.stringify(edits)); } catch(e){}
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+document.getElementById('btn-export').addEventListener('click', function(){
+  var updated = CASES.map(function(c){
+    var e = edits[c.id] || {};
+    var out = Object.assign({}, c);
+    ['t','pre','proc','exp','ev','req'].forEach(function(k){
+      if (e[k] !== undefined) out[k] = e[k];
+    });
+    return out;
+  });
+  var blob = new Blob([JSON.stringify(updated, null, null)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'PRT-0701-cases-reviewed-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function esc(s){
+  var d = document.createElement('div');
+  d.textContent = s == null ? '' : String(s);
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>

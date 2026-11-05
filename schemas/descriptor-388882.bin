@@ -1,0 +1,26 @@
+
+"glucorx/modus/v1alpha2/terms.protoglucorx.modus.v1alpha2"å
+TermsAcceptance
+name (	B‡A
+document (	B‡A‡A
+version (	B‡A‡A4
+accept_time (2.google.protobuf.TimestampB‡A:}ÍAz
+#modus.glucorx.co.uk/TermsAcceptance0users/{user}/termsAcceptances/{terms_acceptance}*termsAcceptances2termsAcceptance"ò
+CreateTermsAcceptanceRequest0
+parent (	B ‡A˙A
+modus.glucorx.co.uk/UserF
+terms_acceptance (2'.glucorx.modus.v1alpha2.TermsAcceptanceB‡A"V
+GetTermsAcceptanceRequest9
+name (	B+‡A˙A%
+#modus.glucorx.co.uk/TermsAcceptance"Ä
+ListTermsAcceptancesRequest0
+parent (	B ‡A˙A
+modus.glucorx.co.uk/User
+	page_size (B‡A
+
+page_token (	B‡A"{
+ListTermsAcceptancesResponseB
+terms_acceptances (2'.glucorx.modus.v1alpha2.TermsAcceptance
+next_page_token (	B,
+uk.co.glucorx.modus.v1alpha2B
+TermsProtoPbproto3

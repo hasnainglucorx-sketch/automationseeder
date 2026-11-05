@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PRT Evidence Recovery</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  body{font-family:"Segoe UI",Arial,sans-serif;margin:24px;background:#f4f5f8;color:#1a2233}
+  h1{font-size:20px;margin:0 0 4px}
+  p.sub{color:#667085;font-size:13px;margin:0 0 20px}
+  .box{background:#fff;border:1px solid #dfe3ea;border-radius:10px;padding:14px 16px;margin-bottom:14px}
+  .warn{background:#fff7e6;border:1px solid #f0c36d;color:#7a5200}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid #eef0f5}
+  th{color:#667085;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  img.thumb{max-width:70px;max-height:50px;border-radius:4px;border:1px solid #dfe3ea;display:block}
+  a.dl{color:#2563eb;text-decoration:none;font-weight:600}
+  a.dl:hover{text-decoration:underline}
+  button{background:#2563eb;color:#fff;border:none;padding:9px 16px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer}
+  button:disabled{background:#9ca3af;cursor:not-allowed}
+  #status{font-size:12.5px;color:#667085;margin-top:8px}
+  code{background:#eef0f5;padding:1px 5px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+<h1>PRT Evidence Recovery</h1>
+<p class="sub">Reads the <code>PRT_EVIDENCE</code> IndexedDB store and the saved run records straight out of this browser profile. Must be opened in the SAME browser (and, for file:// pages, the same origin) you used to run CGMX1-Console.html.</p>
+
+<div class="box warn" id="origin-note"></div>
+
+<div class="box">
+  <button id="btn-scan">Scan for evidence</button>
+  <button id="btn-zip" disabled>Download all as .zip</button>
+  <div id="status"></div>
+</div>
+
+<div class="box" id="results" style="display:none">
+  <table>
+    <thead><tr><th></th><th>File</th><th>Case ID</th><th>Run</th><th>Tag</th><th>Type</th><th></th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
+
+<script>
+document.getElementById('origin-note').textContent =
+  'Current origin: ' + location.origin + (location.protocol==='file:' ? (' | path: ' + location.pathname) : '') +
+  '. If this page shows 0 results but you know evidence was attached, it was probably attached from a different origin/path than this one — open this exact file from the same folder/tab family as the console, or ask Claude to help locate the right one.';
+
+function openDb(){
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('PRT_EVIDENCE', 1);
+    req.onupgradeneeded = e => { e.target.result.createObjectStore('blobs'); };
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror = e => reject(e);
+  });
+}
+
+function getAllBlobs(db){
+  return new Promise((resolve) => {
+    const tx = db.transaction('blobs', 'readonly');
+    const store = tx.objectStore('blobs');
+    const out = [];
+    const req = store.openCursor();
+    req.onsuccess = e => {
+      const cur = e.target.result;
+      if (cur) { out.push({ key: cur.key, blob: cur.value }); cur.continue(); }
+      else resolve(out);
+    };
+    req.onerror = () => resolve(out);
+  });
+}
+
+function buildEvidenceIndex(){
+  // Map evidence-id -> { caseId, name, tag, runName, proto }
+  const idx = {};
+  ['PRT0701_runs','PRT0702_runs'].forEach(lsKey => {
+    let runs = [];
+    try { runs = JSON.parse(localStorage.getItem(lsKey) || '[]'); } catch(e) {}
+    const proto = lsKey.startsWith('PRT0701') ? 'PRT0701' : 'PRT0702';
+    runs.forEach(r => {
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem(proto + '_run_' + r.id) || '{}'); } catch(e) {}
+      const results = saved.results || {};
+      Object.keys(results).forEach(caseId => {
+        const ev = results[caseId].evidence || [];
+        ev.forEach(e => {
+          idx[e.id] = {
+            caseId: caseId,
+            name: e.name || (e.id + '.' + (e.contentType||'').split('/').pop()),
+            tag: e.tag || '',
+            runName: r.name || r.id,
+            proto: proto
+          };
+        });
+      });
+    });
+  });
+  return idx;
+}
+
+let collected = []; // {filename, blob, caseId, runName, tag, type}
+
+document.getElementById('btn-scan').onclick = async () => {
+  const statusEl = document.getElementById('status');
+  statusEl.textContent = 'Scanning…';
+  try {
+    const db = await openDb();
+    const blobs = await getAllBlobs(db);
+    const idx = buildEvidenceIndex();
+    collected = blobs.map(({key, blob}) => {
+      const meta = idx[key] || {};
+      const filename = meta.name || (String(key) + guessExt(blob.type));
+      return {
+        filename, blob,
+        caseId: meta.caseId || '(unmapped)',
+        runName: meta.runName || '',
+        tag: meta.tag || '',
+        type: blob.type || ''
+      };
+    });
+    renderRows(collected);
+    statusEl.textContent = collected.length
+      ? ('Found ' + collected.length + ' evidence file(s).')
+      : 'No evidence blobs found in this browser/origin. Nothing was ever attached here, or it was attached from a different tab/origin.';
+    document.getElementById('btn-zip').disabled = collected.length === 0;
+  } catch (err) {
+    statusEl.textContent = 'Could not open PRT_EVIDENCE database: ' + err;
+  }
+};
+
+function guessExt(mime){
+  if (!mime) return '.bin';
+  if (mime.indexOf('png')>=0) return '.png';
+  if (mime.indexOf('jpeg')>=0||mime.indexOf('jpg')>=0) return '.jpg';
+  if (mime.indexOf('mp4')>=0) return '.mp4';
+  if (mime.indexOf('quicktime')>=0) return '.mov';
+  return '.bin';
+}
+
+function renderRows(items){
+  const rows = document.getElementById('rows');
+  rows.innerHTML = '';
+  items.forEach(item => {
+    const url = URL.createObjectURL(item.blob);
+    const tr = document.createElement('tr');
+    const isImg = (item.type||'').startsWith('image/');
+    tr.innerHTML =
+      '<td>' + (isImg ? '<img class="thumb" src="'+url+'">' : '') + '</td>' +
+      '<td>' + escapeHtml(item.filename) + '</td>' +
+      '<td>' + escapeHtml(item.caseId) + '</td>' +
+      '<td>' + escapeHtml(item.runName) + '</td>' +
+      '<td>' + escapeHtml(item.tag) + '</td>' +
+      '<td>' + escapeHtml(item.type) + '</td>' +
+      '<td><a class="dl" download="' + escapeHtml(item.filename) + '" href="' + url + '">Download</a></td>';
+    rows.appendChild(tr);
+  });
+  document.getElementById('results').style.display = items.length ? 'block' : 'none';
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.getElementById('btn-zip').onclick = async () => {
+  const statusEl = document.getElementById('status');
+  if (typeof JSZip === 'undefined') {
+    statusEl.textContent = 'JSZip failed to load (no internet access?). Use the individual Download links instead.';
+    return;
+  }
+  statusEl.textContent = 'Zipping…';
+  const zip = new JSZip();
+  const usedNames = {};
+  collected.forEach(item => {
+    let name = item.filename;
+    if (usedNames[name]) { usedNames[name]++; name = name.replace(/(\.[^.]+)?$/, '_' + usedNames[name] + '$1'); }
+    else usedNames[name] = 1;
+    zip.file(name, item.blob);
+  });
+  const content = await zip.generateAsync({type:'blob'});
+  const url = URL.createObjectURL(content);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'PRT-evidence-' + new Date().toISOString().slice(0,10) + '.zip';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  statusEl.textContent = 'Zip downloaded (' + collected.length + ' files).';
+};
+</script>
+</body>
+</html>

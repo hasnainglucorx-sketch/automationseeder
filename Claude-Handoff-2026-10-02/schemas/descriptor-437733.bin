@@ -1,0 +1,32 @@
+
++glucorx/modus/v1alpha2/global_service.protoglucorx.modus.v1alpha22∂!
+GlobalServiceä
+CreateModel*.glucorx.modus.v1alpha2.CreateModelRequest.glucorx.modus.v1alpha2.Model"0⁄Amodel,model_idÇ”‰ì:model"/v1alpha2/models|
+GetModel'.glucorx.modus.v1alpha2.GetModelRequest.glucorx.modus.v1alpha2.Model"(⁄AnameÇ”‰ì/v1alpha2/{name=models/*}}
+
+ListModels).glucorx.modus.v1alpha2.ListModelsRequest*.glucorx.modus.v1alpha2.ListModelsResponse"Ç”‰ì/v1alpha2/modelsú
+UpdateModel*.glucorx.modus.v1alpha2.UpdateModelRequest.glucorx.modus.v1alpha2.Model"B⁄Amodel,update_maskÇ”‰ì(:model2/v1alpha2/{model.name=models/*}ã
+CreateBatch*.glucorx.modus.v1alpha2.CreateBatchRequest.glucorx.modus.v1alpha2.Batch"1⁄Abatch,batch_idÇ”‰ì:batch"/v1alpha2/batches}
+GetBatch'.glucorx.modus.v1alpha2.GetBatchRequest.glucorx.modus.v1alpha2.Batch")⁄AnameÇ”‰ì/v1alpha2/{name=batches/*}Å
+ListBatches*.glucorx.modus.v1alpha2.ListBatchesRequest+.glucorx.modus.v1alpha2.ListBatchesResponse"Ç”‰ì/v1alpha2/batchesù
+UpdateBatch*.glucorx.modus.v1alpha2.UpdateBatchRequest.glucorx.modus.v1alpha2.Batch"C⁄Abatch,update_maskÇ”‰ì):batch2 /v1alpha2/{batch.name=batches/*}±
+ProvisionTransmitters4.glucorx.modus.v1alpha2.ProvisionTransmittersRequest5.glucorx.modus.v1alpha2.ProvisionTransmittersResponse"+Ç”‰ì%:*" /v1alpha2/transmitters:provisionî
+GetTransmitter-.glucorx.modus.v1alpha2.GetTransmitterRequest#.glucorx.modus.v1alpha2.Transmitter".⁄AnameÇ”‰ì!/v1alpha2/{name=transmitters/*}ï
+ListTransmitters/.glucorx.modus.v1alpha2.ListTransmittersRequest0.glucorx.modus.v1alpha2.ListTransmittersResponse"Ç”‰ì/v1alpha2/transmittersë
+CreateSensor+.glucorx.modus.v1alpha2.CreateSensorRequest.glucorx.modus.v1alpha2.Sensor"4⁄Asensor,sensor_idÇ”‰ì:sensor"/v1alpha2/sensorsÄ
+	GetSensor(.glucorx.modus.v1alpha2.GetSensorRequest.glucorx.modus.v1alpha2.Sensor")⁄AnameÇ”‰ì/v1alpha2/{name=sensors/*}Å
+ListSensors*.glucorx.modus.v1alpha2.ListSensorsRequest+.glucorx.modus.v1alpha2.ListSensorsResponse"Ç”‰ì/v1alpha2/sensors≈
+CreateFirmwareImage2.glucorx.modus.v1alpha2.CreateFirmwareImageRequest%.glucorx.modus.v1alpha2.FirmwareImage"S⁄A firmware_image,firmware_image_idÇ”‰ì*:firmware_image"/v1alpha2/firmwareImagesª
+PublishFirmwareImage3.glucorx.modus.v1alpha2.PublishFirmwareImageRequest4.glucorx.modus.v1alpha2.PublishFirmwareImageResponse"8Ç”‰ì2:*"-/v1alpha2/firmwareImages:publishFirmwareImageú
+GetFirmwareImage/.glucorx.modus.v1alpha2.GetFirmwareImageRequest%.glucorx.modus.v1alpha2.FirmwareImage"0⁄AnameÇ”‰ì#!/v1alpha2/{name=firmwareImages/*}ù
+ListFirmwareImages1.glucorx.modus.v1alpha2.ListFirmwareImagesRequest2.glucorx.modus.v1alpha2.ListFirmwareImagesResponse" Ç”‰ì/v1alpha2/firmwareImages∆
+CreateFirmwarePatch2.glucorx.modus.v1alpha2.CreateFirmwarePatchRequest%.glucorx.modus.v1alpha2.FirmwarePatch"T⁄A firmware_patch,firmware_patch_idÇ”‰ì+:firmware_patch"/v1alpha2/firmwarePatchesù
+GetFirmwarePatch/.glucorx.modus.v1alpha2.GetFirmwarePatchRequest%.glucorx.modus.v1alpha2.FirmwarePatch"1⁄AnameÇ”‰ì$"/v1alpha2/{name=firmwarePatches/*}°
+ListFirmwarePatches2.glucorx.modus.v1alpha2.ListFirmwarePatchesRequest3.glucorx.modus.v1alpha2.ListFirmwarePatchesResponse"!Ç”‰ì/v1alpha2/firmwarePatches÷
+AuditFirmwareConnectivity8.glucorx.modus.v1alpha2.AuditFirmwareConnectivityRequest9.glucorx.modus.v1alpha2.AuditFirmwareConnectivityResponse"D⁄AmodelÇ”‰ì64/v1alpha2/{model=models/*}:auditFirmwareConnectivityë
+CreateRecall+.glucorx.modus.v1alpha2.CreateRecallRequest.glucorx.modus.v1alpha2.Recall"4⁄Arecall,recall_idÇ”‰ì:recall"/v1alpha2/recallsÄ
+	GetRecall(.glucorx.modus.v1alpha2.GetRecallRequest.glucorx.modus.v1alpha2.Recall")⁄AnameÇ”‰ì/v1alpha2/{name=recalls/*}Å
+ListRecalls*.glucorx.modus.v1alpha2.ListRecallsRequest+.glucorx.modus.v1alpha2.ListRecallsResponse"Ç”‰ì/v1alpha2/recallsì
+RescindRecall,.glucorx.modus.v1alpha2.RescindRecallRequest.glucorx.modus.v1alpha2.Recall"4⁄AnameÇ”‰ì':*""/v1alpha2/{name=recalls/*}:rescind—
+RegisterTransmitterKey5.glucorx.modus.v1alpha2.RegisterTransmitterKeyRequest6.glucorx.modus.v1alpha2.RegisterTransmitterKeyResponse"HÇ”‰ìB:*"=/v1alpha2/{transmitter=transmitters/*}:registerTransmitterKey Aglobal.modus.glucorx.co.ukB4
+uk.co.glucorx.modus.v1alpha2BGlobalServiceProtoPbproto3
