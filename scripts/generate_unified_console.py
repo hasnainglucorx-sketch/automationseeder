@@ -236,17 +236,26 @@ button{font-family:inherit;cursor:pointer}
 /* ── DETAIL PANEL ────────────────────────────────────────────────── */
 #detail{
   width:420px;flex-shrink:0;background:var(--surface);
-  border-left:1px solid var(--border);display:none;flex-direction:column;overflow:hidden
+  border-left:1px solid var(--border);display:none;flex-direction:column;overflow:hidden;
+  position:relative;min-width:320px;max-width:95vw
 }
 #detail.open{display:flex}
+#detail.maximized{width:92vw!important}
+#det-resize{
+  position:absolute;left:-4px;top:0;bottom:0;width:8px;cursor:col-resize;z-index:20;
+  background:transparent
+}
+#det-resize:hover,#det-resize.active{background:var(--accent)}
 #det-head{
   padding:11px 13px;border-bottom:1px solid var(--border);
   flex-shrink:0;background:var(--surface);position:relative
 }
 #det-id{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--text-faint)}
-#det-title{font-size:14px;font-weight:700;color:var(--text);margin:3px 0 6px;line-height:1.3}
+#det-title{font-size:14px;font-weight:700;color:var(--text);margin:3px 0 6px;line-height:1.3;padding-right:60px}
 #det-meta{display:flex;gap:5px;flex-wrap:wrap}
 .chip{font-size:10.5px;font-weight:600;color:var(--text-dim);background:var(--surface-2);border:1px solid var(--border);padding:2px 8px;border-radius:100px}
+#det-expand{position:absolute;right:45px;top:11px;background:var(--surface-2);border:1px solid var(--border);border-radius:7px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:13px}
+#det-expand:hover{background:var(--surface-3,var(--surface-2));color:var(--text)}
 #det-close{position:absolute;right:11px;top:11px;background:var(--surface-2);border:1px solid var(--border);border-radius:7px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:14px}
 #det-close:hover{background:var(--fail-weak);color:var(--fail);border-color:var(--fail)}
 #det-body{flex:1;overflow-y:auto;padding:12px 13px 16px;display:flex;flex-direction:column;gap:13px}
@@ -540,10 +549,12 @@ button{font-family:inherit;cursor:pointer}
 
   <!-- Detail panel -->
   <div id="detail">
+    <div id="det-resize" title="Drag to resize"></div>
     <div id="det-head">
       <div id="det-id"></div>
       <div id="det-title"></div>
       <div id="det-meta"></div>
+      <button id="det-expand" onclick="toggleDetailMaximize()" title="Expand/collapse panel">⤢</button>
       <button id="det-close" onclick="closeDetail()">✕</button>
     </div>
     <div id="det-body">
@@ -883,6 +894,44 @@ function closeDetail() {
   document.getElementById('detail').classList.remove('open');
   selId = null;
   document.querySelectorAll('.row').forEach(r => r.classList.remove('sel'));
+}
+
+// ── DETAIL PANEL RESIZE / EXPAND ──────────────────────────────────────────────
+(function initDetailResize(){
+  var panel = document.getElementById('detail');
+  var handle = document.getElementById('det-resize');
+  if (!panel || !handle) return;
+
+  var saved = parseInt(localStorage.getItem('detailPanelWidth') || '', 10);
+  if (saved && saved >= 320) panel.style.width = Math.min(saved, Math.floor(window.innerWidth*0.95)) + 'px';
+
+  var dragging = false, startX = 0, startW = 0;
+  handle.addEventListener('mousedown', function(e){
+    if (panel.classList.contains('maximized')) return;
+    dragging = true; startX = e.clientX; startW = panel.getBoundingClientRect().width;
+    handle.classList.add('active');
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', function(e){
+    if (!dragging) return;
+    var dx = startX - e.clientX; // dragging left (negative clientX delta) widens the panel
+    var w = Math.max(320, Math.min(startW + dx, Math.floor(window.innerWidth*0.95)));
+    panel.style.width = w + 'px';
+  });
+  window.addEventListener('mouseup', function(){
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('active');
+    document.body.style.userSelect = '';
+    localStorage.setItem('detailPanelWidth', Math.round(panel.getBoundingClientRect().width));
+  });
+})();
+
+function toggleDetailMaximize(){
+  var panel = document.getElementById('detail');
+  panel.classList.toggle('maximized');
+  document.getElementById('det-expand').textContent = panel.classList.contains('maximized') ? '⤡' : '⤢';
 }
 
 function openCaseInExec() {
