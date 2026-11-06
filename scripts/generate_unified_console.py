@@ -499,6 +499,9 @@ button{font-family:inherit;cursor:pointer}
     </div>
     <!-- Execution mode controls (hidden in cases mode) -->
     <div id="exec-btns" style="display:none;align-items:center;gap:4px">
+      <button class="icon-btn" id="btn-assets-exec" title="Test assets &amp; QR codes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </button>
       <button class="icon-btn" id="btn-exp-tog" title="Export">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
       </button>
@@ -708,8 +711,11 @@ function switchProto(p) {
   // update assets overlay title and btn tooltip
   var assetsTitle = document.getElementById('assets-overlay-title');
   if (assetsTitle) assetsTitle.textContent = p === 'portal' ? 'Modus Portal — Test Assets' : 'Modus App — Test Assets & QR Codes';
-  var assetsBtn = document.getElementById('btn-assets');
-  if (assetsBtn) assetsBtn.title = p === 'portal' ? 'Portal test accounts & environment' : 'Test assets & QR codes';
+  var assetsTooltip = p === 'portal' ? 'Portal test accounts & environment' : 'Test assets & QR codes';
+  ['btn-assets','btn-assets-exec'].forEach(function(id){
+    var btn = document.getElementById(id);
+    if (btn) btn.title = assetsTooltip;
+  });
   // refresh assets panel if it's open
   if (!document.getElementById('overlay-assets').classList.contains('hidden')) refreshAccountDisplay();
   const si = document.getElementById('search-inp'); if (si) si.value = '';
@@ -1834,10 +1840,13 @@ document.addEventListener('DOMContentLoaded', function(){
     if(e.target===this) this.classList.add('hidden');
   });
 
-  // Assets overlay
-  document.getElementById('btn-assets').addEventListener('click',function(){
-    document.getElementById('overlay-assets').classList.remove('hidden');
-    refreshAccountDisplay();
+  // Assets overlay (same button in both Test Cases and Execution toolbars)
+  ['btn-assets','btn-assets-exec'].forEach(function(id){
+    var btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click',function(){
+      document.getElementById('overlay-assets').classList.remove('hidden');
+      refreshAccountDisplay();
+    });
   });
   document.getElementById('assets-close').addEventListener('click',function(){
     document.getElementById('overlay-assets').classList.add('hidden');
