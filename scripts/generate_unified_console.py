@@ -437,6 +437,7 @@ button{font-family:inherit;cursor:pointer}
 .acct-table{border-collapse:collapse;width:100%;font-size:12px}
 .acct-table td,.acct-table th{padding:5px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
 .acct-table th{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-faint);font-weight:700}
+.acct-table td.data-val{vertical-align:top;font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.6;color:var(--text)}
 #saved-flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--pass);color:#fff;padding:8px 20px;border-radius:100px;font-size:12.5px;font-weight:700;display:none;z-index:200}
 #saved-flash.show{display:block}
 
@@ -1913,8 +1914,8 @@ function _renderAppAssets(panel){
     {ref:'QA-REG-EMAIL-A', purpose:'Fresh registration + verification (HOSTED-REG-003); unused address, inbox access required'},
     {ref:'QA-REG-EMAIL-B', purpose:'Expired-link and resend checks (HOSTED-REG-004); unused address, inbox access required'},
     {ref:'QA-REG-EMAIL-C', purpose:'Language/region mismatch check (HOSTED-REG-007); unused address, inbox access required'},
-    {ref:'QA-REG-REGION-UK-01',purpose:'United Kingdom region check (HOSTED-REG-005); reused by ONBOARD-ALERT-001, HOSTED-SIGNIN-010; unused address, inbox access required'},
-    {ref:'QA-REG-REGION-US-01',purpose:'United States region check (HOSTED-REG-006); unused address, inbox access required'},
+    {ref:'QA-REG-REGION-UK-01',purpose:'United Kingdom region check (HOSTED-REG-005); reused by ONBOARD-ALERT-001, HOSTED-SIGNIN-010; unused address, inbox access required. Given name: Test · Region: United Kingdom · Glucose unit: mmol/L'},
+    {ref:'QA-REG-REGION-US-01',purpose:'United States region check (HOSTED-REG-006); unused address, inbox access required. Given name: Test · Region: United States · Glucose unit: mg/dL'},
     {ref:'QA-EMAIL-CHANGE-01',purpose:'Change Email check (SECURITY-003); account + replacement, both inboxes accessible'},
     {ref:'QA-DELETE-01',   purpose:'Account deletion (DELETE-001 to DELETE-006); new disposable account each run'},
     {ref:'QA-DELETE-REPL-01',purpose:"Replacement account that tries to use the deleted account's transmitter (DELETE-006)"},
@@ -1928,13 +1929,29 @@ function _renderAppAssets(panel){
   });
   var dataSetRows='';
   [
-    {ref:'REG-FORM-DATA',purpose:'Registration form values (HOSTED-REG-001, 002, 003, 007) &#x2014; dummy values, not credentials for any real account'},
-    {ref:'RESET-FORM-DATA',purpose:'Forgot/reset password form values (RESET-001) &#x2014; dummy values, not credentials for any real account'},
-    {ref:'PROFILE-DATA',purpose:'Profile Setup values (PROFILE-001); unit follows Country automatically'},
-    {ref:'REG-MISMATCH',purpose:'Language/region combination that triggers the mismatch warning (HOSTED-REG-007)'},
-    {ref:'RESET-LINK-VALIDITY',purpose:'Reset link validity period (RESET-001) &#x2014; read from Realm Settings &gt; Tokens before the run'},
-    {ref:'REG-LINK-VALIDITY',purpose:'Verification link validity period (HOSTED-REG-004) &#x2014; read from Realm Settings &gt; Tokens before the run'}
-  ].forEach(function(row){dataSetRows+='<tr><td><code>'+esc(row.ref)+'</code></td><td>'+row.purpose+'</td></tr>';});
+    {ref:'REG-FORM-DATA',
+     value:'Valid format email: qa.reg01@example.com\nInvalid format email: qa.reg@\nValid password: Abcdefgh1!jk\nDifferent password: Zyxwvuts2@lk\nToo short password: Ab1!abcdefg\nNo number password: Abcdefgh!ijk\nNo lowercase password: ABCDEFGH1!JK\nNo uppercase password: abcdefgh1!jk\nNo special character password: Abcdefgh1ijk\nGiven name: Test\nFamily name: User\nRegion: United Kingdom\nValid date of birth: 15 3 1990\nInvalid date of birth (non-existent date): 31 2 1990\nValid mobile number (UK +44): 7911123456\nValid mobile number (US +1): 2025550123\nInvalid mobile number (too short): 123',
+     purpose:'Dummy values for registration form checks (HOSTED-REG-001, 002, 003, 007). Not credentials for any real account.'},
+    {ref:'RESET-FORM-DATA',
+     value:'Invalid format email: qa.check@\nInvalid email (correct format, not in the system): qa.nouser@example.com\nValid password: Abcdefgh1!jk\nDifferent password: Zyxwvuts2@lk\nToo short password: Ab1!abcdefg\nNo number password: Abcdefgh!ijk\nNo lowercase password: ABCDEFGH1!JK\nNo uppercase password: abcdefgh1!jk\nNo special character password: Abcdefgh1ijk\nWeak strength password (1 red segment): abcdefghi\nMedium strength password (2 orange segments): abcdefghijklmnop\nStronger strength password (3 orange segments): sddadassdadsadsadddasdsadasdas@\nStrong strength password (4 green segments): sddadassdadsadsadddasdsadasdas@12',
+     purpose:'Dummy values for forgot password and reset password checks (RESET-001). Not credentials for any real account.'},
+    {ref:'QA-RESET-NEW-PASSWORD', value:'Set per run — recorded in the controlled credential source, not here.',
+     purpose:'New password set for the QA-RESET-01 account in RESET-001.'},
+    {ref:'RESET-LINK-VALIDITY',
+     value:'5 minutes, as stated in the reset email — verify against Realm Settings > Tokens > User-Initiated Action Lifespan (and any per-action override) before the run.',
+     purpose:'Reset link validity period (RESET-001).'},
+    {ref:'PROFILE-DATA',
+     value:'Date of birth: 15 March 1990\nValid phone number (local, no calling code): 2025550123\nInvalid phone number (too short): 12345\nUnited Kingdom: Glucose unit mmol/L\nUnited States: Glucose unit mg/dL',
+     purpose:'Profile Setup values (PROFILE-001). Unit follows Country automatically.'},
+    {ref:'QA-REG-PASSWORD', value:'Set per run — recorded in the controlled credential source, not here.',
+     purpose:'Password for the new accounts created in HOSTED-REG-003, 005, 006 and 007.'},
+    {ref:'REG-LINK-VALIDITY',
+     value:'Read before the run from Realm Settings > Tokens > User-Initiated Action Lifespan (and any per-action override) — do not assume the default.',
+     purpose:'Verification link validity period (HOSTED-REG-004).'},
+    {ref:'REG-MISMATCH',
+     value:'Language: [ set from controlled source ]\nRegion: [ set from controlled source ]\nWarning text: [ set from controlled source ]',
+     purpose:'Language/region combination that triggers the mismatch warning (HOSTED-REG-007).'}
+  ].forEach(function(row){dataSetRows+='<tr><td><code>'+esc(row.ref)+'</code></td><td class="data-val">'+esc(row.value).replace(/\n/g,'<br>')+'</td><td>'+row.purpose+'</td></tr>';});
   var sensorRows='';
   [
     {ref:'SENSOR-VALID-01',purpose:'GS1 01095060001343521730123121SN0001234; Sensor ID SN0001234; expires 31 Dec 2030 &#x2014; valid in-date sensor'},
@@ -1968,7 +1985,7 @@ function _renderAppAssets(panel){
     '<div class="device-ref"><h5>Test account references</h5>'+
     '<p class="acct-hint">Emails are set in <strong>Run Setup &#x2699;</strong> where a field exists; the rest are tracked outside this console in the controlled credential source. Never record passwords here.</p>'+
     '<table class="acct-table"><thead><tr><th>Reference</th><th>Purpose</th><th>Current email</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-    '<details class="device-ref"><summary><strong>Form data sets &amp; link-validity references</strong></summary><table class="acct-table"><thead><tr><th>Reference</th><th>Purpose</th></tr></thead><tbody>'+dataSetRows+'</tbody></table></details>'+
+    '<details class="device-ref" open><summary><strong>Form data sets &amp; link-validity references</strong></summary><table class="acct-table"><thead><tr><th>Reference</th><th>Test Data</th><th>Description</th></tr></thead><tbody>'+dataSetRows+'</tbody></table></details>'+
     '<div class="asset-grid" id="qr-grid"></div>'+
     '<details class="device-ref"><summary><strong>Sensor, barcode &amp; transmitter identifiers</strong></summary><table class="acct-table"><thead><tr><th>Reference</th><th>Purpose</th></tr></thead><tbody>'+sensorRows+'</tbody></table></details>'+
     '<details class="device-ref"><summary><strong>Test conditions</strong></summary><table class="acct-table"><thead><tr><th>Reference</th><th>Purpose</th></tr></thead><tbody>'+conditionRows+'</tbody></table></details>'+
