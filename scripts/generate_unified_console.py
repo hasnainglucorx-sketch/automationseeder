@@ -438,6 +438,11 @@ button{font-family:inherit;cursor:pointer}
 .acct-table td,.acct-table th{padding:5px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
 .acct-table th{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-faint);font-weight:700}
 .acct-table td.data-val{vertical-align:top;font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.6;color:var(--text)}
+.acct-table tr.td-section td{background:var(--surface-2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);padding:7px 9px}
+.acct-table tr.td-note td{font-size:11.5px;font-style:italic;color:var(--text-faint);line-height:1.5;padding:8px 9px;background:var(--surface)}
+.testdata-table{table-layout:fixed}
+.testdata-table td:first-child{width:160px}
+.testdata-table td:last-child{width:260px}
 #saved-flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--pass);color:#fff;padding:8px 20px;border-radius:100px;font-size:12.5px;font-weight:700;display:none;z-index:200}
 #saved-flash.show{display:block}
 
@@ -1901,103 +1906,83 @@ function _renderAppAssets(panel){
   var m={}; try{m=JSON.parse(localStorage.getItem('prt0701-setup-meta')||'{}');}catch(e){}
   var acc=m.accounts||{};
   var DEFAULTS={accountMain:'faran@glucorx.co.uk',accountHistory:'rekod43112@maxtanie.com',accountNoData:'similoh324@caps7.com',accountRegion:'362qq@aristocrtic.live'};
-  var refs=[
-    {ref:'QA-MAIN-01',     purpose:'Primary active session',        key:'accountMain'},
-    {ref:'QA-HISTORY-01',  purpose:'Historical, reports and restoration', key:'accountHistory'},
-    {ref:'QA-NODATA-01',   purpose:'Empty 24 Hours / populated 3 Days',   key:'accountNoData'},
-    {ref:'QA-REGION-US-01',purpose:'US regional configuration',     key:'accountRegion'},
-    {ref:'QA-RESET-01',    purpose:'Password-reset account (RESET-001); inbox access required'},
-    {ref:'QA-SHARE-A-01',  purpose:'Sharing sender, Account A (SHARE-001 to SHARE-011); inbox access required'},
-    {ref:'QA-SHARE-B-01',  purpose:'Sharing recipient, Account B (SHARE-001 to SHARE-011); inbox access required'},
-    {ref:'QA-UNVERIFIED-01',purpose:'Registered, email never verified (HOSTED-SIGNIN-005); inbox access required'},
-    {ref:'QA-FRESH-01',    purpose:'Never completed onboarding (HOSTED-SIGNIN-011); new account each run'},
-    {ref:'QA-REG-EMAIL-A', purpose:'Fresh registration + verification (HOSTED-REG-003); unused address, inbox access required'},
-    {ref:'QA-REG-EMAIL-B', purpose:'Expired-link and resend checks (HOSTED-REG-004); unused address, inbox access required'},
-    {ref:'QA-REG-EMAIL-C', purpose:'Language/region mismatch check (HOSTED-REG-007); unused address, inbox access required'},
-    {ref:'QA-REG-REGION-UK-01',purpose:'United Kingdom region check (HOSTED-REG-005); reused by ONBOARD-ALERT-001, HOSTED-SIGNIN-010; unused address, inbox access required. Given name: Test · Region: United Kingdom · Glucose unit: mmol/L'},
-    {ref:'QA-REG-REGION-US-01',purpose:'United States region check (HOSTED-REG-006); unused address, inbox access required. Given name: Test · Region: United States · Glucose unit: mg/dL'},
-    {ref:'QA-EMAIL-CHANGE-01',purpose:'Change Email check (SECURITY-003); account + replacement, both inboxes accessible'},
-    {ref:'QA-DELETE-01',   purpose:'Account deletion (DELETE-001 to DELETE-006); new disposable account each run'},
-    {ref:'QA-DELETE-REPL-01',purpose:"Replacement account that tries to use the deleted account's transmitter (DELETE-006)"},
-    {ref:'CLINIC-CODE-01', purpose:'Valid test clinic for Clinic Connect (CLINIC-005, CLINIC-006)'}
+
+  // Transcribed verbatim from section 9.3 "Test Data" of the controlled
+  // PRT-0392 protocol docx — same reference IDs, same order, same section
+  // headers, so this table and the doc never drift apart silently.
+  var TESTDATA_ROWS=[
+    {section:"ACCOUNTS"},
+    {ref:"QA-MAIN-01", value:"[ Enter email ]", desc:"Primary QA account for onboarding, sign-in and active-session cases", key:"accountMain"},
+    {ref:"QA-HISTORY-01", value:"[ Enter email ]", desc:"Historical readings, reports, events and calibrations", key:"accountHistory"},
+    {ref:"QA-NODATA-01", value:"[ Enter email ]", desc:"Empty 24 Hours state with populated 3 Days state", key:"accountNoData"},
+    {ref:"QA-REGION-US-01", value:"[ Enter email ]", desc:"US regional configuration cases", key:"accountRegion"},
+    {ref:"QA-RESET-01", value:"[ Enter email ] - inbox access required", desc:"The valid email in the reset cases. Password-reset account (RESET-001). Its password is changed by RESET-001; record the new password in the controlled credential source."},
+    {ref:"RESET-FORM-DATA", value:"Invalid format email: qa.check@\nInvalid email (correct format, not in the system): qa.nouser@example.com\nValid password: Abcdefgh1!jk\nDifferent password: Zyxwvuts2@lk\nToo short password: Ab1!abcdefg\nNo number password: Abcdefgh!ijk\nNo lowercase password: ABCDEFGH1!JK\nNo uppercase password: abcdefgh1!jk\nNo special character password: Abcdefgh1ijk\nWeak strength password (1 red segment): abcdefghi\nMedium strength password (2 orange segments): abcdefghijklmnop\nStronger strength password (3 orange segments): sddadassdadsadsadddasdsadasdas@\nStrong strength password (4 green segments): sddadassdadsadsadddasdsadasdas@12", desc:"Dummy values for forgot password and reset password checks (RESET-001). Not credentials for any real account."},
+    {ref:"QA-RESET-NEW-PASSWORD", value:"[ Enter Password ]", desc:"New password set for the QA-RESET-01 account in RESET-001, from the controlled credential source."},
+    {ref:"RESET-LINK-VALIDITY", value:"5 minutes, as stated in the reset email. Check it against Realm Settings > Tokens > User-Initiated Action Lifespan (and any per-action override) before the run.", desc:"Reset link validity period (RESET-001)."},
+    {ref:"PROFILE-DATA", value:"Date of birth: 15 March 1990\nValid phone number (local number, no calling code): 2025550123\nInvalid phone number (too short): 12345\nCountry United Kingdom: Glucose unit mmol/L\nCountry United States: Glucose unit mg/dL", desc:"Profile Setup values (PROFILE-001). The unit follows the Country automatically."},
+    {ref:"QA-SHARE-A-01", value:"[ Enter email ] - inbox access required", desc:"Sharing sender, Account A (SHARE-001 to SHARE-011)."},
+    {ref:"QA-SHARE-B-01", value:"[ Enter email ] - inbox access required", desc:"Sharing recipient, Account B (SHARE-001 to SHARE-011); signed in on a second phone for SHARE-008."},
+    {ref:"QA-UNVERIFIED-01", value:"[ Enter email ] - inbox access required; email never verified", desc:"Registered account with incomplete email activation (HOSTED-SIGNIN-005)."},
+    {ref:"QA-FRESH-01", value:"[ Enter email ] - new account for each run", desc:"Account that has never completed onboarding (HOSTED-SIGNIN-011)."},
+    {ref:"REG-FORM-DATA", value:"Valid format email: qa.reg01@example.com\nInvalid format email: qa.reg@\nValid password: Abcdefgh1!jk\nDifferent password: Zyxwvuts2@lk\nToo short password: Ab1!abcdefg\nNo number password: Abcdefgh!ijk\nNo lowercase password: ABCDEFGH1!JK\nNo uppercase password: abcdefgh1!jk\nNo special character password: Abcdefgh1ijk\nGiven name: Test\nFamily name: User\nRegion: United Kingdom\nValid date of birth: 15 3 1990\nInvalid date of birth (non-existent date): 31 2 1990\nValid mobile number (UK +44): 7911123456\nValid mobile number (US +1): 2025550123\nInvalid mobile number (too short): 123", desc:"Dummy values for registration form checks (HOSTED-REG-001, 002, 003, 007). Not credentials for any real account."},
+    {ref:"QA-REG-PASSWORD", value:"[ Enter Password ]", desc:"Password for the new accounts created in HOSTED-REG-003, 005, 006 and 007, from the controlled credential source."},
+    {ref:"QA-REG-EMAIL-A", value:"[ Enter email ] - unused address, inbox access required", desc:"Fresh email A for hosted registration and verification (HOSTED-REG-003)."},
+    {ref:"QA-REG-EMAIL-B", value:"[ Enter email ] - unused address, inbox access required", desc:"Fresh email B for expired-link and resend checks (HOSTED-REG-004)."},
+    {ref:"QA-REG-EMAIL-C", value:"[ Enter email ] - unused address, inbox access required", desc:"Fresh email C for the language and region mismatch check (HOSTED-REG-007)."},
+    {ref:"REG-LINK-VALIDITY", value:"[ Enter value ] - read before the run from Realm Settings > Tokens > User-Initiated Action Lifespan (and any per-action override); do not assume the default", desc:"Verification link validity period (HOSTED-REG-004)."},
+    {ref:"QA-REG-REGION-UK-01", value:"Email: [ Enter email ] - unused address, inbox access required\nGiven name: Test\nRegion: United Kingdom\nGlucose unit: mmol/L", desc:"New account for the United Kingdom region check (HOSTED-REG-005); the same account is reused by ONBOARD-ALERT-001 and HOSTED-SIGNIN-010."},
+    {ref:"QA-REG-REGION-US-01", value:"Email: [ Enter email ] - unused address, inbox access required\nGiven name: Test\nRegion: United States\nGlucose unit: mg/dL", desc:"New account for the United States region check (HOSTED-REG-006)."},
+    {ref:"REG-MISMATCH", value:"Language: [ Enter language ]\nRegion: [ Enter region ]\nWarning text: [ Enter text ]", desc:"Language and region combination that triggers the mismatch warning (HOSTED-REG-007)."},
+    {ref:"QA-EMAIL-CHANGE-01", value:"Account: [ Enter email ]; replacement: [ Enter email ] - both inboxes accessible", desc:"Change Email check (SECURITY-003)."},
+    {ref:"QA-DELETE-01", value:"[ Enter email ] - new disposable account for each run", desc:"Account deletion (DELETE-001 to DELETE-006); deleted by DELETE-004. A transmitter registered to it in DELETE-006 stays locked permanently."},
+    {ref:"QA-DELETE-REPL-01", value:"[ Enter email ]", desc:"Replacement account that tries to use the deleted account's transmitter (DELETE-006)."},
+    {ref:"TX-B-01", value:"[ Enter transmitter ID ]", desc:"Transmitter B, registered to QA-DELETE-01 before deletion (DELETE-006)."},
+    {ref:"CLINIC-CODE-01", value:"Clinic code: [ Enter clinic code ] / Clinic name: [ Enter clinic name ]", desc:"Valid test clinic for Clinic Connect (CLINIC-005, CLINIC-006)."},
+    {section:"SENSOR / BARCODE IDs"},
+    {ref:"SENSOR-VALID-01", value:"GS1: 01095060001343521730123121SN0001234; Sensor ID: SN0001234; expires 31 Dec 2030", desc:"Valid in-date sensor for positive scan and manual-entry flow"},
+    {ref:"SENSOR-VALID-01 (with lot)", value:"GS1: (01)09506000134352(17)301231(10)LOT42(21)SN0001234; Lot: LOT42", desc:"GS1 lot and serial parsing"},
+    {ref:"SENSOR-EXPIRED-01", value:"GS1: 01095060001343521722123121SN0009999; Sensor ID: SN0009999; expired 31 Dec 2022", desc:"Expired sensor rejection (scan and manual entry)"},
+    {ref:"SENSOR-RECALLED-01", value:"Quality-approved recalled sensor identifier; recall record active before execution", desc:"Recalled sensor rejection"},
+    {ref:"SENSOR-INVALID-01", value:"Quality-approved invalid or known-nonexistent sensor identifier", desc:"Manual Sensor ID negative input"},
+    {ref:"BARCODE-WRONGTYPE-01", value:"Quality-approved valid barcode for a different product type", desc:"Wrong-product scan rejection"},
+    {ref:"TX-RECALLED-01", value:"Quality-approved recalled transmitter identifier; recall record active before execution", desc:"Recalled transmitter rejection"},
+    {section:"TEST CONDITIONS"},
+    {ref:"DRIFT-SEQ-01", value:"Turn off automatic time (iOS: Settings > General > Date & Time > Set Automatically; Android: Settings > System > Date & time > Set time automatically), then set the clock back 60 s. Keep Bluetooth on. Turn automatic time back on after the test.", desc:"Future-timestamp drift (60 s): transmitter readings arrive ahead of device time"},
+    {ref:"SERVER-FAIL-01", value:"Settings > Wi-Fi off and Mobile Data off. Keep Bluetooth on. Do NOT use Airplane Mode. Restore Wi-Fi and Mobile Data after the test.", desc:"Server check failure while the CGM sensor stays connected"},
+    {section:"SIMULATOR CONDITIONS (Modus-D-Pocket-v3 / Nobe, nRF52-DK BLE board)"},
+    {note:"SW1 and SW2 are analogue potentiometers that set the glucose output; SW3 gives On, Off and Reset; LED1-3 show the operating state. Each condition is judged by the confirmed live glucose value shown in the app, not by the dial position. Record the SW1/SW2 position and the resulting glucose value in the execution evidence. No dial angles, resistance or ADC values are defined."},
+    {ref:"SIM-NORMAL-01", value:"SW1/SW2 at the middle position. Hold the controls steady until consecutive live readings stay within 70-180 mg/dL.", desc:"Normal (In Range) live readings"},
+    {ref:"SIM-LOW-01", value:"Turn SW1/SW2 toward the low end until the live reading is above 56 and below 70 mg/dL. Target 63 mg/dL for non-critical Low cases; use 70 mg/dL when testing the exact Low threshold.", desc:"Non-critical Low"},
+    {ref:"SIM-SEVERE-LOW-01", value:"Turn SW1/SW2 to the lowest output position. Confirm the live reading is 56 mg/dL or below before evaluating the Critical/Severe Low alarm.", desc:"Critical / Severe Low"},
+    {ref:"SIM-HIGH-01", value:"Turn SW1/SW2 toward the highest output position. Target 200 mg/dL for a clear High; use 180 mg/dL when testing the exact High threshold.", desc:"High"},
+    {ref:"SIM-NODATA-01", value:"Move SW3 to Off to stop live transmission. Recover with SW3 On, or Reset followed by On.", desc:"No data / transmitter off"},
+    {ref:"SIM-STEADY-01", value:"Keep SW1/SW2 unchanged across successive measurement cycles until Steady appears.", desc:"Steady trend"},
+    {ref:"SIM-RISING-01", value:"Turn SW1/SW2 up once between measurement cycles: small successive adjustments give Slowly Rising, larger ones give Rising, the largest sustained adjustments give Rapidly Rising. Return to a stable middle output (SIM-NORMAL-01) to reset the rapid-trend notification.", desc:"Rising trends (Slowly Rising, Rising, Rapidly Rising)"},
+    {ref:"SIM-FALLING-01", value:"Turn SW1/SW2 down once between measurement cycles: small successive adjustments give Slowly Falling, larger ones give Falling, the largest sustained adjustments give Rapidly Falling. Return to a stable middle output (SIM-NORMAL-01) to reset the rapid-trend notification.", desc:"Falling trends (Slowly Falling, Falling, Rapidly Falling)"},
   ];
-  var rows='';
-  refs.forEach(function(row){
-    var email=row.key?(acc[row.key]||DEFAULTS[row.key]||''):'';
-    var copyBtn=email?'<button class="icon-btn" style="width:24px;height:24px" title="Copy" onclick="navigator.clipboard.writeText(\''+esc(email)+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2v1"/></svg></button>':'';
-    rows+='<tr><td><code>'+esc(row.ref)+'</code></td><td>'+esc(row.purpose)+'</td><td>'+(email?esc(email):'&#x2014;')+'</td><td>'+copyBtn+'</td></tr>';
+
+  var bodyRows='';
+  TESTDATA_ROWS.forEach(function(row){
+    if (row.section) { bodyRows += '<tr class="td-section"><td colspan="3">'+esc(row.section)+'</td></tr>'; return; }
+    if (row.note)    { bodyRows += '<tr class="td-note"><td colspan="3">'+esc(row.note)+'</td></tr>'; return; }
+    var valueHtml;
+    if (row.key) {
+      var email = acc[row.key] || DEFAULTS[row.key] || '';
+      var copyBtn = email ? '<button class="icon-btn" style="width:22px;height:22px;margin-left:7px;vertical-align:middle" title="Copy" onclick="navigator.clipboard.writeText(\''+esc(email)+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2v1"/></svg></button>' : '';
+      valueHtml = (email ? esc(email) : esc(row.value)) + copyBtn;
+    } else {
+      valueHtml = esc(row.value).replace(/\n/g,'<br>');
+    }
+    bodyRows += '<tr><td><code>'+esc(row.ref)+'</code></td><td class="data-val">'+valueHtml+'</td><td>'+esc(row.desc)+'</td></tr>';
   });
-  var dataSetRows='';
-  [
-    {ref:'REG-FORM-DATA',
-     value:'Valid format email: qa.reg01@example.com\nInvalid format email: qa.reg@\nValid password: Abcdefgh1!jk\nDifferent password: Zyxwvuts2@lk\nToo short password: Ab1!abcdefg\nNo number password: Abcdefgh!ijk\nNo lowercase password: ABCDEFGH1!JK\nNo uppercase password: abcdefgh1!jk\nNo special character password: Abcdefgh1ijk\nGiven name: Test\nFamily name: User\nRegion: United Kingdom\nValid date of birth: 15 3 1990\nInvalid date of birth (non-existent date): 31 2 1990\nValid mobile number (UK +44): 7911123456\nValid mobile number (US +1): 2025550123\nInvalid mobile number (too short): 123',
-     purpose:'Dummy values for registration form checks (HOSTED-REG-001, 002, 003, 007). Not credentials for any real account.'},
-    {ref:'RESET-FORM-DATA',
-     value:'Invalid format email: qa.check@\nInvalid email (correct format, not in the system): qa.nouser@example.com\nValid password: Abcdefgh1!jk\nDifferent password: Zyxwvuts2@lk\nToo short password: Ab1!abcdefg\nNo number password: Abcdefgh!ijk\nNo lowercase password: ABCDEFGH1!JK\nNo uppercase password: abcdefgh1!jk\nNo special character password: Abcdefgh1ijk\nWeak strength password (1 red segment): abcdefghi\nMedium strength password (2 orange segments): abcdefghijklmnop\nStronger strength password (3 orange segments): sddadassdadsadsadddasdsadasdas@\nStrong strength password (4 green segments): sddadassdadsadsadddasdsadasdas@12',
-     purpose:'Dummy values for forgot password and reset password checks (RESET-001). Not credentials for any real account.'},
-    {ref:'QA-RESET-NEW-PASSWORD', value:'Set per run — recorded in the controlled credential source, not here.',
-     purpose:'New password set for the QA-RESET-01 account in RESET-001.'},
-    {ref:'RESET-LINK-VALIDITY',
-     value:'5 minutes, as stated in the reset email — verify against Realm Settings > Tokens > User-Initiated Action Lifespan (and any per-action override) before the run.',
-     purpose:'Reset link validity period (RESET-001).'},
-    {ref:'PROFILE-DATA',
-     value:'Date of birth: 15 March 1990\nValid phone number (local, no calling code): 2025550123\nInvalid phone number (too short): 12345\nUnited Kingdom: Glucose unit mmol/L\nUnited States: Glucose unit mg/dL',
-     purpose:'Profile Setup values (PROFILE-001). Unit follows Country automatically.'},
-    {ref:'QA-REG-PASSWORD', value:'Set per run — recorded in the controlled credential source, not here.',
-     purpose:'Password for the new accounts created in HOSTED-REG-003, 005, 006 and 007.'},
-    {ref:'REG-LINK-VALIDITY',
-     value:'Read before the run from Realm Settings > Tokens > User-Initiated Action Lifespan (and any per-action override) — do not assume the default.',
-     purpose:'Verification link validity period (HOSTED-REG-004).'},
-    {ref:'REG-MISMATCH',
-     value:'Language: [ set from controlled source ]\nRegion: [ set from controlled source ]\nWarning text: [ set from controlled source ]',
-     purpose:'Language/region combination that triggers the mismatch warning (HOSTED-REG-007).'}
-  ].forEach(function(row){dataSetRows+='<tr><td><code>'+esc(row.ref)+'</code></td><td class="data-val">'+esc(row.value).replace(/\n/g,'<br>')+'</td><td>'+row.purpose+'</td></tr>';});
-  var sensorRows='';
-  [
-    {ref:'SENSOR-VALID-01',purpose:'GS1 01095060001343521730123121SN0001234; Sensor ID SN0001234; expires 31 Dec 2030 &#x2014; valid in-date sensor'},
-    {ref:'SENSOR-VALID-01 (with lot)',purpose:'GS1 (01)09506000134352(17)301231(10)LOT42(21)SN0001234; Lot LOT42 &#x2014; GS1 lot and serial parsing'},
-    {ref:'SENSOR-EXPIRED-01',purpose:'GS1 01095060001343521722123121SN0009999; Sensor ID SN0009999; expired 31 Dec 2022 &#x2014; expired sensor rejection'},
-    {ref:'SENSOR-RECALLED-01',purpose:'Quality-approved recalled sensor identifier; recall record active before execution &#x2014; recalled sensor rejection'},
-    {ref:'SENSOR-INVALID-01',purpose:'Quality-approved invalid/known-nonexistent sensor identifier &#x2014; manual Sensor ID negative input'},
-    {ref:'BARCODE-WRONGTYPE-01',purpose:'Quality-approved valid barcode for a different product type &#x2014; wrong-product scan rejection'},
-    {ref:'TX-RECALLED-01',purpose:'Quality-approved recalled transmitter identifier; recall record active before execution &#x2014; recalled transmitter rejection'},
-    {ref:'TX-B-01',purpose:'Transmitter B, registered to QA-DELETE-01 before deletion (DELETE-006)'}
-  ].forEach(function(row){sensorRows+='<tr><td><code>'+esc(row.ref)+'</code></td><td>'+row.purpose+'</td></tr>';});
-  var conditionRows='';
-  [
-    {ref:'DRIFT-SEQ-01',purpose:'Future-timestamp drift (60s): turn off automatic time, set the clock back 60s, keep Bluetooth on; restore automatic time after the test'},
-    {ref:'SERVER-FAIL-01',purpose:'Server check failure while the CGM sensor stays connected: Wi-Fi off and Mobile Data off, keep Bluetooth on (not Airplane Mode); restore after the test'}
-  ].forEach(function(row){conditionRows+='<tr><td><code>'+esc(row.ref)+'</code></td><td>'+row.purpose+'</td></tr>';});
-  var simRows='';
-  [
-    {ref:'SIM-NORMAL-01',purpose:'SW1/SW2 middle position; consecutive live readings 70&#x2013;180 mg/dL &#x2014; Normal (In Range)'},
-    {ref:'SIM-LOW-01',purpose:'SW1/SW2 toward low end, reading &gt;56 and &lt;70 mg/dL (target 63; use 70 for the exact threshold) &#x2014; non-critical Low'},
-    {ref:'SIM-SEVERE-LOW-01',purpose:'SW1/SW2 lowest output; reading &#x2264;56 mg/dL &#x2014; Critical/Severe Low'},
-    {ref:'SIM-HIGH-01',purpose:'SW1/SW2 toward highest output (target 200; use 180 for the exact threshold) &#x2014; High'},
-    {ref:'SIM-NODATA-01',purpose:'SW3 Off stops transmission; recover with SW3 On, or Reset then On &#x2014; No data / transmitter off'},
-    {ref:'SIM-STEADY-01',purpose:'SW1/SW2 unchanged across successive cycles until Steady appears'},
-    {ref:'SIM-RISING-01',purpose:'SW1/SW2 turned up once per cycle: small = Slowly Rising, larger = Rising, largest sustained = Rapidly Rising; return to SIM-NORMAL-01 to reset'},
-    {ref:'SIM-FALLING-01',purpose:'SW1/SW2 turned down once per cycle: small = Slowly Falling, larger = Falling, largest sustained = Rapidly Falling; return to SIM-NORMAL-01 to reset'}
-  ].forEach(function(row){simRows+='<tr><td><code>'+esc(row.ref)+'</code></td><td>'+row.purpose+'</td></tr>';});
+
   panel.innerHTML=
     '<div class="desc">Scan these QR codes with the Step 14/22 sensor camera scanner. The raw GS1 strings are also available for generating printed stickers.</div>'+
     '<div class="warmup-tip"><strong>Warm-up bypass (debug mode)</strong> In debug builds: tap the build / version number <strong>10 times</strong> on the app&#x2019;s About or Splash screen to activate debug mode and skip the 60-minute warm-up.</div>'+
-    '<div class="device-ref"><h5>Test account references</h5>'+
-    '<p class="acct-hint">Emails are set in <strong>Run Setup &#x2699;</strong> where a field exists; the rest are tracked outside this console in the controlled credential source. Never record passwords here.</p>'+
-    '<table class="acct-table"><thead><tr><th>Reference</th><th>Purpose</th><th>Current email</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-    '<details class="device-ref" open><summary><strong>Form data sets &amp; link-validity references</strong></summary><table class="acct-table"><thead><tr><th>Reference</th><th>Test Data</th><th>Description</th></tr></thead><tbody>'+dataSetRows+'</tbody></table></details>'+
+    '<p class="acct-hint">Reference ID / Test Data / Description mirror section 9.3 Test Data of the controlled protocol exactly. Rows with a copy button are set in <strong>Run Setup &#x2699;</strong>; everything else is tracked outside this console in the controlled credential source. Never record passwords here.</p>'+
+    '<table class="acct-table testdata-table"><thead><tr><th>Reference ID</th><th>Test Data</th><th>Description</th></tr></thead><tbody>'+bodyRows+'</tbody></table>'+
     '<div class="asset-grid" id="qr-grid"></div>'+
-    '<details class="device-ref"><summary><strong>Sensor, barcode &amp; transmitter identifiers</strong></summary><table class="acct-table"><thead><tr><th>Reference</th><th>Purpose</th></tr></thead><tbody>'+sensorRows+'</tbody></table></details>'+
-    '<details class="device-ref"><summary><strong>Test conditions</strong></summary><table class="acct-table"><thead><tr><th>Reference</th><th>Purpose</th></tr></thead><tbody>'+conditionRows+'</tbody></table></details>'+
-    '<div class="device-ref"><h5>Glucose simulator &#x2014; control reference</h5><table>'+
-    '<tr><td>SW1 / SW2</td><td>Potentiometers &#x2014; turn to set glucose output level (Critical Low / Normal / High)</td></tr>'+
-    '<tr><td>SW3 &#xB7; On</td><td>Power on / start transmitting</td></tr>'+
-    '<tr><td>SW3 &#xB7; Off</td><td>Power off / stop transmitting</td></tr>'+
-    '<tr><td>SW3 &#xB7; Reset</td><td>Reset simulator to default state</td></tr>'+
-    '<tr><td>LED1&#x2013;3</td><td>Mode indicators showing current operating state</td></tr>'+
-    '<tr><td>nRF52-DK</td><td>BLE transmitter board (blue, PCA10040) &#x2014; firmware installed via JFlash. Powers the BLE link to the iOS app.</td></tr>'+
-    '</table></div>'+
-    '<details class="device-ref"><summary><strong>Simulator conditions (SW1/SW2/SW3)</strong></summary><p class="acct-hint">Each condition is judged by the confirmed live glucose value shown in the app, not by dial position. Record the SW1/SW2 position and the resulting glucose value in the execution evidence.</p><table class="acct-table"><thead><tr><th>Reference</th><th>Purpose</th></tr></thead><tbody>'+simRows+'</tbody></table></details>'+
     '<div class="help-block"><h4>QA-HISTORY-01 fixture note</h4>This account requires a backend re-seed before execution of any history or reports cases. Confirm with the backend team that the fixture is current before running the batch.</div>';
   // re-populate QR grid after innerHTML reset
   if(typeof populateQrGrid==='function') populateQrGrid();
